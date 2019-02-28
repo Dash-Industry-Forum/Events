@@ -20,7 +20,7 @@ Abstract: None
 </pre>
 
 
-# DASH clients architecture for processing the event and timed metadata # {#event-architecture}
+# DASH player architecture for processing the event and timed metadata # {#event-architecture}
 
 Figure 1 demonstrates a generic architecture of the DASH player including the event and timed metadata processing models.
 
@@ -623,7 +623,7 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
 
 > Y= Yes, N= NO, O= Optional
 
-Note:  In the case of ‘emsg’ version 0, the DASH client is expected to calculate <var>presentation_time</var> from <var>presentation_time_delta</var>.
+Note:  In the case of ‘emsg’ version 0, the DASH player is expected to calculate <var>presentation_time</var> from <var>presentation_time_delta</var>.
 
 In order to remove a listener the **unsubscribeEvent()** function is
 called with the following arguments:
