@@ -82,12 +82,12 @@ Figure 3 shows the emsg box format in DASH:
   <pre>
   aligned(8) class DASHEventMessageBox extends FullBox(‘emsg’, version, flags = 0){
    if (version==0) {
-      string            scheme_id_uri;
-      string            value;
-      unsigned int(32)  timescale;
-      unsigned int(32)  presentation_time_delta;
-      unsigned int(32)  event_duration;
-      unsigned int(32)  id;
+      string               scheme_id_uri;
+      string               value;
+      unsigned int(32)     timescale;
+      unsigned int(32)     presentation_time_delta;
+      unsigned int(32)     event_duration;
+      unsigned int(32)     id;
    } else if (version==1) {
       unsigned int(32)     timescale;
       unsigned int(64)     presentation_time;
@@ -115,6 +115,7 @@ $$
 <figcaption>Event Start Time of an inband event</figcaption>
 </figure>
 
+
 Where <var>PeriodStart</var> is the corresponding Period‘s start time, and <{SegmentBase/presentationTimeoffset}> and <{SegmentBase/timescale}> are the [=Presentation Time Offset=] (PTO) and [=time scale=] of the corresponding Represenation.
 
 Note: <var>PT</var> is always equal to or larger than <var>RT</var> in both versions of emsg.
@@ -134,135 +135,553 @@ In this document, we use the following common variable names instead of some of 
 
 MPD events carry the similar data model as the inband event. However they are carried in the MPD, at the Period elements. Each Period event has <{EventStream}> element(s), defining the <{EventStream/schemeIdUri}>, <{EventStream/value}> , <{EventStream/timescale}> and a sequences of <{Event}> elements. Each event may have <{Event/presentationTime}>, <{Event/duration}>, <{Event/id}> and <{Event/messageData}> attributes, as shown in Figure 4.
 
-<figure> 
-<table>
-    <tbody>
-    <tr class="odd">
-    <td><table>
-    <thead>
-    <tr class="header">
-    <th><strong>Element or Attribute</strong></th>
-    <th><strong>Use</strong></th>
-    <th><strong>Description</strong></th>
-    <th></th>
-    <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr class="odd">
-    <td><strong>EventStream</strong></td>
-    <td></td>
-    <td>specifies event Stream</td>
-    <td></td>
-    </tr>
-    <tr class="even">
-    <td>@xlink:href</td>
-    <td>O</td>
-    <td>specifies a reference to an external <strong>EventStream</strong> element</td>
-    </tr>
-    <tr class="odd">
-    <td>@xlink:actuate</td>
-    <td><p>OD</p>
-    <p>default:<br />
-    onRequest</p></td>
-    <td><p>specifies the processing instructions, which can be either "onLoad" or "onRequest".</p>
-    <p>This attribute shall not be present if the @xlink:href attribute is not present.</p></td>
-    </tr>
-    <tr class="even">
-    <td>@schemeIdUri</td>
-    <td>M</td>
-    <td>identifies the message scheme. The string may use URN or URL syntax. When a URL is used, it is recommended to also contain a month-date in the form mmyyyy; the assignment of the URL must have been authorized by the owner of the domain name in that URL on or very close to that date. A URL may resolve to an Internet location, and a location that does resolve may store a specification of the message scheme.</td>
-    </tr>
-    <tr class="odd">
-    <td>@value</td>
-    <td>O</td>
-    <td>specifies the value for the event stream element. The value space and semantics must be defined by the owners of the scheme identified in the @schemeIdUri attribute.</td>
-    </tr>
-    <tr class="even">
-    <td>@timescale</td>
-    <td>O</td>
-    <td><p>specifies the timescale in units per seconds to be used for the derivation of different real-time duration values in the <strong>Event</strong> elements.</p>
-    <p>If not present on any level, it shall be set to 1.</p></td>
-    </tr>
-    <tr class="odd">
-    <td><strong>Event</strong></td>
-    <td>0 ... N</td>
-    <td><p>specifies one event. For details see Table 5.31.</p>
-    <p>Events in Event Streams shall be ordered such that their presentation time is non-decreasing.</p></td>
-    </tr>
-    </tbody>
+
+<figure><table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse;border:none'>
+ <tr>
+  <td width=623 valign=top style='width:467.25pt;border:solid #4472C4 2.25pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal><span lang=DE-AT>&nbsp;</span></p>
+  <table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width="99%"
+   style='width:99.2%;border-collapse:collapse;border:none'>
+   <tr>
+    <td width="29%" colspan=3 valign=top style='width:29.84%;border:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=TableCell style='margin-top:3.0pt;page-break-after:avoid'><b>Element
+    or Attribute Name</b></p>
+    </td>
+    <td width="13%" valign=top style='width:13.84%;border:solid black 1.0pt;
+    border-left:none;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=TableCell style='margin-top:3.0pt;page-break-after:avoid'><b>Use</b></p>
+    </td>
+    <td width="56%" valign=top style='width:56.32%;border:solid black 1.0pt;
+    border-left:none;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=TableCell style='margin-top:3.0pt;page-break-after:avoid'><b>Description</b></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><b><span style='font-size:9.0pt'>&nbsp;</span></b></p>
+    </td>
+    <td width="27%" colspan=2 valign=top style='width:27.32%;border-top:none;
+    border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><b><span style='font-size:9.0pt;font-family:"Courier New"'>EventStream</span></b></p>
+    </td>
+    <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><b><span
+    style='font-size:9.0pt'>&nbsp;</span></b></p>
+    </td>
+    <td width="56%" valign=top style='width:56.32%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>specifies event
+    Stream</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><b><span style='font-size:9.0pt'>&nbsp;</span></b></p>
+    </td>
+    <td width="2%" valign=top style='width:2.64%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><b><span style='font-size:9.0pt'>&nbsp;</span></b></p>
+    </td>
+    <td width="24%" valign=top style='width:24.68%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt;font-family:"Courier New"'>@xlink:href</span></p>
+    </td>
+    <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;text-align:center;
+    page-break-after:avoid'><span style='font-size:9.0pt'>O</span></p>
+    </td>
+    <td width="56%" valign=top style='width:56.32%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>specifies </span><span
+    style='font-size:9.0pt'>a reference to an external </span><b><span
+    style='font-size:9.0pt;font-family:"Courier New"'>EventStream</span></b><span
+    style='font-size:9.0pt'> element</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.64%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.68%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt;font-family:"Courier New"'>@xlink:actuate</span></p>
+    </td>
+    <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:9.0pt'>OD</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;text-align:center;
+    page-break-after:avoid'><span style='font-size:9.0pt'>default:<br>
+    </span><span style='font-size:9.0pt;font-family:"Courier New"'>onRequest</span></p>
+    </td>
+    <td width="56%" valign=top style='width:56.32%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:10.0pt;margin-left:0in;text-align:left;page-break-after:avoid'><span
+    style='font-size:9.0pt'>specifies </span><span style='font-size:9.0pt'>the
+    processing instructions, which can be either &quot;</span><span
+    style='font-size:9.0pt;font-family:"Courier New"'>onLoad</span><span
+    style='font-size:9.0pt'>&quot; or &quot;</span><span style='font-size:9.0pt;
+    font-family:"Courier New"'>onRequest</span><span style='font-size:9.0pt'>&quot;.</span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>This attribute shall
+    not be present if the </span><span style='font-size:9.0pt;font-family:"Courier New"'>@xlink:href</span><span
+    style='font-size:9.0pt'> attribute is not present.</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.64%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.68%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt;font-family:"Courier New"'>@schemeIdUri</span></p>
+    </td>
+    <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;text-align:center;
+    page-break-after:avoid'><span style='font-size:9.0pt'>M</span></p>
+    </td>
+    <td width="56%" valign=top style='width:56.32%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>identifies the
+    message scheme. The string may use URN or URL syntax.&nbsp; When a URL is
+    used, it is recommended to also contain a month-date in the form mmyyyy;
+    the assignment of the URL must have been authorized by the owner of the
+    domain name in that URL on or very close to that date.&nbsp; A URL may
+    resolve to an Internet location, and a location that does resolve may store
+    a specification of the message scheme.</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.64%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><b><span style='font-size:9.0pt'>&nbsp;</span></b></p>
+    </td>
+    <td width="24%" valign=top style='width:24.68%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt;font-family:"Courier New"'>@value</span></p>
+    </td>
+    <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;text-align:center;
+    page-break-after:avoid'><span style='font-size:9.0pt'>O</span></p>
+    </td>
+    <td width="56%" valign=top style='width:56.32%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>specifies the value
+    for the event stream element. The value space and semantics must be defined
+    by the owners of the scheme identified in the </span><span
+    style='font-size:9.0pt;font-family:"Courier New"'>@schemeIdUri</span><span
+    style='font-size:9.0pt'> attribute.</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.64%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.68%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt;font-family:"Courier New"'>@timescale</span></p>
+    </td>
+    <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:9.0pt'>O</span></p>
+    </td>
+    <td width="56%" valign=top style='width:56.32%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt'>specifies the timescale in units per seconds to be
+    used for the derivation of different real-time duration values in the </span><b><span
+    style='font-size:9.0pt;font-family:"Courier New"'>Event</span></b><span
+    style='font-size:9.0pt'> elements.</span></p>
+    <p class=MsoNormal align=left style='text-align:left'><span
+    style='font-size:9.0pt'>If not present on any level, it shall be set to 1.</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.64%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.68%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><b><span
+    style='font-size:9.0pt;font-family:"Courier New"'>Event</span></b></p>
+    </td>
+    <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;text-align:center;
+    page-break-after:avoid'><span style='font-size:9.0pt'>0 ... N</span></p>
+    </td>
+    <td width="56%" valign=top style='width:56.32%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>specifies one event.
+    For details see Table 5.31. </span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>Events in Event
+    Streams shall be ordered such that their presentation time is
+    non-decreasing.</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="100%" colspan=5 valign=top style='width:100.0%;border:solid black 1.0pt;
+    border-top:none;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=TH align=left style='margin-bottom:0in;margin-bottom:.0001pt;
+    text-align:left'><span style='font-size:9.0pt'>Legend:</span></p>
+    <p class=TH align=left style='margin-top:0in;margin-right:0in;margin-bottom:
+    0in;margin-left:.25in;margin-bottom:.0001pt;text-align:left'><span
+    style='font-size:9.0pt;font-weight:normal'>For attributes: M=Mandatory,
+    O=Optional, OD=Optional with Default Value, CM=Conditionally Mandatory.</span></p>
+    <p class=TH align=left style='margin-top:0in;margin-right:0in;margin-bottom:
+    0in;margin-left:.25in;margin-bottom:.0001pt;text-align:left'><span
+    style='font-size:9.0pt;font-weight:normal'>For elements:
+    &lt;minOccurs&gt;...&lt;maxOccurs&gt; (N=unbounded)</span></p>
+    <p class=TH align=left style='margin-top:0in;margin-right:0in;margin-bottom:
+    3.0pt;margin-left:0in;text-align:left'><span style='font-size:9.0pt;
+    font-weight:normal'>Elements are </span><span style='font-size:9.0pt;
+    font-family:"Courier New"'>bold</span><span style='font-size:9.0pt;
+    font-weight:normal'>; attributes are non-bold and preceded with an @.</span></p>
+    </td>
+   </tr>
+  </table>
+  <p class=MsoNormal><span lang=DE-AT>&nbsp;</span></p>
+  <p class=MsoNormal><span lang=DE-AT>&nbsp;</span></p>
+  <table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width="99%"
+   style='width:99.2%;border-collapse:collapse;border:none'>
+   <tr>
+    <td width="34%" colspan=5 valign=top style='width:34.44%;border:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=TableCell><b>Element or Attribute Name</b></p>
+    </td>
+    <td width="14%" valign=top style='width:14.16%;border:solid black 1.0pt;
+    border-left:none;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=TableCell style='margin-top:3.0pt;page-break-after:avoid'><b>Use</b></p>
+    </td>
+    <td width="51%" valign=top style='width:51.4%;border:solid black 1.0pt;
+    border-left:none;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=TableCell style='margin-top:3.0pt;page-break-after:avoid'><b>Description</b></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.54%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="26%" colspan=2 valign=top style='width:26.8%;border-top:none;
+    border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><b><span style='font-size:9.0pt;font-family:"Courier New"'>Event</span></b></p>
+    </td>
+    <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><b><span
+    style='font-size:9.0pt'>&nbsp;</span></b></p>
+    </td>
+    <td width="51%" valign=top style='width:51.4%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>specifies an event
+    and contains </span><span style='font-size:9.0pt'>the message of the event,
+    formatted as a string. The content of this element depends on the event
+    scheme.</span><span style='font-size:9.0pt'> </span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.54%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.62%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt;font-family:"Courier New"'>@presentationTime</span></p>
+    </td>
+    <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;text-align:center;
+    page-break-after:avoid'><span style='font-size:9.0pt'>OD<br>
+    default: 0</span></p>
+    </td>
+    <td width="51%" valign=top style='width:51.4%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='text-align:left'><span
+    style='font-size:9.0pt'>specifies</span><span style='font-size:9.0pt'> the
+    presentation time of the event relative to the start of the Period.</span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>The value of the
+    presentation time in seconds is the division of the value of this attribute
+    and the value of the </span><span style='font-size:9.0pt;font-family:"Courier New"'>@timescale</span><span
+    style='font-size:9.0pt'> attribute.</span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>If not present, the
+    value of the presentation time is 0.</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.54%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.62%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt;font-family:"Courier New"'>@duration</span></p>
+    </td>
+    <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:9.0pt'>O</span></p>
+    </td>
+    <td width="51%" valign=top style='width:51.4%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>specifies</span><span
+    style='font-size:9.0pt'> the presentation duration of the event.</span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>The value of the
+    duration in seconds is the division of the value of this attribute and the
+    value of the </span><span style='font-size:9.0pt;font-family:"Courier New"'>@timescale</span><span
+    style='font-size:9.0pt'> attribute.</span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>If not present, the
+    value of the duration is unknown.</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.54%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.62%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'>@id</span></p>
+    </td>
+    <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;text-align:center;
+    page-break-after:avoid'><span style='font-size:9.0pt'>O</span></p>
+    </td>
+    <td width="51%" valign=top style='width:51.4%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>specifies an
+    identifier for this instance of the event.&nbsp; Events with equivalent
+    content and attribute values in the </span><b><span style='font-size:9.0pt;
+    font-family:"Courier New"'>Event</span></b><span style='font-size:9.0pt'>
+    element shall have the same value for this attribute. </span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:8.0pt'>The scope of the </span><span
+    style='font-size:8.0pt;font-family:"Courier New"'>@id</span><span
+    style='font-size:8.0pt'> for each Event is with the same </span><span
+    style='font-size:8.0pt;font-family:"Courier New"'>@schemeIdURI</span><span
+    style='font-size:8.0pt'> and </span><span style='font-size:8.0pt;
+    font-family:"Courier New"'>@value</span><span style='font-size:8.0pt'>
+    pair.</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.54%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.62%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'>@messageData</span></p>
+    </td>
+    <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;text-align:center;
+    page-break-after:avoid'><span style='font-size:9.0pt'>O</span></p>
+    </td>
+    <td width="51%" valign=top style='width:51.4%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>specifies the value
+    for the event stream element. The value space and semantics must be defined
+    by the owners of the scheme identified in the </span><span
+    style='font-size:9.0pt;font-family:"Courier New"'>@schemeIdUri</span><span
+    style='font-size:9.0pt'> attribute.</span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>NOTE: this attribute
+    is an alternative to specifying a complete XML element(s) in the Event. It
+    is useful when an event leans itself to a compact string representation</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="100%" colspan=7 valign=top style='width:100.0%;border:solid black 1.0pt;
+    border-top:none;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=TH align=left style='margin-bottom:0in;margin-bottom:.0001pt;
+    text-align:left'><span style='font-size:9.0pt'>Legend:</span></p>
+    <p class=TH align=left style='margin-top:0in;margin-right:0in;margin-bottom:
+    0in;margin-left:.25in;margin-bottom:.0001pt;text-align:left'><span
+    style='font-size:9.0pt;font-weight:normal'>For attributes: M=Mandatory,
+    O=Optional, OD=Optional with Default Value, CM=Conditionally Mandatory.</span></p>
+    <p class=TH align=left style='margin-top:0in;margin-right:0in;margin-bottom:
+    0in;margin-left:.25in;margin-bottom:.0001pt;text-align:left'><span
+    style='font-size:9.0pt;font-weight:normal'>For elements:
+    &lt;minOccurs&gt;...&lt;maxOccurs&gt; (N=unbounded)</span></p>
+    <p class=TH align=left style='margin-top:0in;margin-right:0in;margin-bottom:
+    3.0pt;margin-left:0in;text-align:left'><span style='font-size:9.0pt;
+    font-weight:normal'>Elements are </span><span style='font-size:9.0pt;
+    font-family:"Courier New"'>bold</span><span style='font-size:9.0pt;
+    font-weight:normal'>; attributes are non-bold and preceded with an @.</span></p>
+    </td>
+   </tr>
+  </table>
+  <p class=MsoNormal></p>
+  </td>
+ </tr>
 </table>
-<table>
-    <tbody>
-    <tr class="even">
-    <td><p>Legend:</p>
-    <blockquote>
-    <p>For attributes: M=Mandatory, O=Optional, OD=Optional with Default Value, CM=Conditionally Mandatory.</p>
-    <p>For elements: &lt;minOccurs&gt;...&lt;maxOccurs&gt; (N=unbounded)</p>
-    </blockquote>
-    <p>Elements are bold; attributes are non-bold and preceded with an @.</p></td>
-    </tr>
-    </table>
-    <table>
-    <thead>
-    <tr class="header">
-    <th><strong>Element or Attribute Name</strong></th>
-    <th><strong>Use</strong></th>
-    <th><strong>Description</strong></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr class="odd">
-    <td><strong>Event</strong></td>
-    <td></td>
-    <td>specifies an event and contains the message of the event, formatted as a string. The content of this element depends on the event scheme.</td>
-    <td></td>
-    </tr>
-    <tr class="even">
-    <td>@presentationTime</td>
-    <td>OD<br />
-    default: 0</td>
-    <td><p>specifies the presentation time of the event relative to the start of the Period.</p>
-    <p>The value of the presentation time in seconds is the division of the value of this attribute and the value of the @timescale attribute.</p>
-    <p>If not present, the value of the presentation time is 0.</p></td>
-    </tr>
-    <tr class="odd">
-    <td>@duration</td>
-    <td>O</td>
-    <td><p>specifies the presentation duration of the event.</p>
-    <p>The value of the duration in seconds is the division of the value of this attribute and the value of the @timescale attribute.</p>
-    <p>If not present, the value of the duration is unknown.</p></td>
-    </tr>
-    <tr class="even">
-    <td>@id</td>
-    <td>O</td>
-    <td><p>specifies an identifier for this instance of the event. Events with equivalent content and attribute values in the <strong>Event</strong> element shall have the same value for this attribute.</p>
-    <p>The scope of the @id for each Event is with the same @schemeIdURI and @value pair.</p></td>
-    </tr>
-    <tr class="odd">
-    <td>@messageData</td>
-    <td>O</td>
-    <td><p>specifies the value for the event stream element. The value space and semantics must be defined by the owners of the scheme identified in the @schemeIdUri attribute.</p>
-    <p>Note: this attribute is an alternative to specifying a complete XML element(s) in the Event. It is useful when an event leans itself to a compact string representation</p></td>
-    </tr>
-</table>
-<table>
-    <tbody>
-    <tr class="even">
-    <td><p>Legend:</p>
-    <blockquote>
-    <p>For attributes: M=Mandatory, O=Optional, OD=Optional with Default Value, CM=Conditionally Mandatory.</p>
-    <p>For elements: &lt;minOccurs&gt;...&lt;maxOccurs&gt; (N=unbounded)</p>
-    </blockquote>
-    <p>Elements are bold; attributes are non-bold and preceded with an @.</p></td>
-    </tr>
-    </tbody>
-    </table></td>
-    </tr>
-    </tbody>
-    </table>
-<figcaption>MPD event elements</figcaption>
+  <figcaption>MPD event elements</figcaption>
 </figure>
+
 
 As is shown in Figure 5, each MPD event has 3 associated timing
 paramters in the media timeline:
