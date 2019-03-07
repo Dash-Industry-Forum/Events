@@ -19,6 +19,17 @@ Boilerplate: copyright off, abstract off
 Abstract: None
 </pre>
 
+#External Defintion - (to be removed)
+
+<dfn element>SegmentBase</dfn>
+<dl dfn-type="element-attr" dfn-for="SegmentBase">
+<dfn>PresentationTimeOffset</dfn> 
+<dfn>timescale</dfn>
+</dl>
+<dfn>Presentation time offset</dfn>  
+<dfn>time scale</dfn>
+<dfn>period</dfn>
+<dfn>cmaf</dfn> 
 
 # DASH player architecture for processing the event and timed metadata # {#event-architecture}
 
@@ -79,39 +90,135 @@ The third parameter is Event Duration (<var>DU</var> ), the duration in which th
 Figure 3 shows the emsg box format in DASH:
 
 <figure>
-  <pre>
-  aligned(8) class DASHEventMessageBox extends FullBox(‘emsg’, version, flags = 0){
-   if (version==0) {
-      string               scheme_id_uri;
-      string               value;
-      unsigned int(32)     timescale;
-      unsigned int(32)     presentation_time_delta;
-      unsigned int(32)     event_duration;
-      unsigned int(32)     id;
-   } else if (version==1) {
-      unsigned int(32)     timescale;
-      unsigned int(64)     presentation_time;
-      unsigned int(32)     event_duration;
-      unsigned int(32)     id;
-      string               scheme_id_uri;
-      string               value;
-   }
-   unsigned int(8)   message_data[];
-}
-  </pre>
-  <figcaption>The emsg box format and parameters</figcaption>
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse;border:none'>
+ <tr>
+  <td width=623 valign=top style='width:467.25pt;border:solid #4472C4 2.25pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal><span lang=DE-AT>&nbsp;</span></p>
+<table>
+<tr>
+ <td colspan="4">aligned(8) class DASHEventMessageBox extends FullBox (‘emsg’, version, flags = 0){</td>
+</tr>
+<tr><tr  class="odd">
+<td></td>
+<td colspan="2">if (version==0) {</td>
+<td></td>
+</tr></tr>
+
+<tr class="even">
+<td></td>
+<td></td>
+<td>string</td>
+<td><dfn>scheme_id_uri</dfn>;</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>string</td>
+<td><dfn>value</dfn>;</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>unsigned int(32)</td>
+<td><dfn>timescale</dfn>;</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>unsigned int(32)</td>
+<td><dfn>presentation_time_delta</dfn>;</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>unsigned int(32)</td>
+<td><dfn>event_duration</dfn>;</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>unsigned int(32)</td>
+<td><dfn>id</dfn>;</td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="2">} else if (version==1) {</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>unsigned int(32)</td>
+<td>[=timescale=];</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>unsigned int(64)</td>
+<td><dfn>presentation_time</dfn>;</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>unsigned int(32)</td>
+<td>[=event_duration=];</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>unsigned int(32)</td>
+<td>[=id=];</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>string</td>
+<td>[=scheme_id_uri=];</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>string</td>
+<td>[=value=];</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td colspan="2">}</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="2">unsigned int(8)</td>
+<td><dfn>message_data()</dfn>;</td>
+</tr>
+<tr class="odd">
+<td colspan="4">}</td>
+</tr>
+</tbody>
+</table>
+ <p class=MsoNormal></p>
+  </td>
+ </tr>
+</table>
+<figcaption>The emsg box format and parameters</figcaption>
 </figure>
 
+
+
 The <var>PT</var> of an event can be calculated using values in its emsg box:
+
 
 <figure>
 
 $$PT = \begin{cases}
 RT + \frac{presentation\_time\_delta}{timescale} \space
 \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad  version=0\\ 
-PeriodStart -  \frac{SegmentBase@presentationTimeOffset}{SegmentBase@timescale} + \frac{presentation\_time}{timescale}\qquad \qquad version=1
+PeriodStart -  \frac{<{SegmentBase/presentationTimeOffset}>}{<{SegmentBase/timescale}>} + \frac{presentation\_time}{timescale}\qquad \qquad version=1
 \end{cases}
 $$
+
 <figcaption>Event Start Time of an inband event</figcaption>
 </figure>
 
@@ -124,12 +231,13 @@ Note: Since the media sample timescales might be different than emsg's timescale
 
 Note: If various Adaptation Sets carry the same events, different
 Adaptation Sets/Representations with different PTOs, the
-<var>presentation_time_delta</var> and/or <var>presentation_time</var> values might be different per Adaptation Set/Representation, i.e. the same emsg box can not be replicated over multiple Representations and/or Adaptations Sets.
+[=presentation_time_delta=] and/or [=presentation_time=] values might be different per Adaptation Set/Representation, i.e. the same emsg box can not be replicated over multiple Representations and/or Adaptations Sets.
 
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
 
-- <var>scheme_id</var> = scheme_id_uri
-- <var>duration</var> = event_duration
+- <var>scheme_id</var> = [=scheme_id_uri=]
+- <var>duration</var> = [=event_duration=]
+- <var>message_data</var> = [=message_data()=]
 
 ## MPD events timing model ## {#mpd-event-timing}
 
@@ -169,7 +277,7 @@ MPD events carry the similar data model as the inband event. However they are ca
     border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
-    page-break-after:avoid'><b><span style='font-size:9.0pt;font-family:"Courier New"'>EventStream</span></b></p>
+    page-break-after:avoid'><b><span style='font-size:9.0pt;font-family:"Courier New"'><dfn element>EventStream</dfn></span></b></p>
     </td>
     <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -272,7 +380,7 @@ MPD events carry the similar data model as the inband event. However they are ca
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'>@schemeIdUri</span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="EventStream">@<dfn>schemeIdUri</dfn></dl></span></p>
     </td>
     <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -307,7 +415,7 @@ MPD events carry the similar data model as the inband event. However they are ca
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'>@value</span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="EventStream">@<dfn>value</dfn></dl></span></p>
     </td>
     <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -340,7 +448,7 @@ MPD events carry the similar data model as the inband event. However they are ca
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'>@timescale</span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="EventStream">@<dfn>timescale</dfn></dl></span></p>
     </td>
     <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -374,7 +482,7 @@ MPD events carry the similar data model as the inband event. However they are ca
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><b><span
-    style='font-size:9.0pt;font-family:"Courier New"'>Event</span></b></p>
+    style='font-size:9.0pt;font-family:"Courier New"'><{Event}></span></b></p>
     </td>
     <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -451,7 +559,7 @@ MPD events carry the similar data model as the inband event. However they are ca
     border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
-    page-break-after:avoid'><b><span style='font-size:9.0pt;font-family:"Courier New"'>Event</span></b></p>
+    page-break-after:avoid'><b><span style='font-size:9.0pt;font-family:"Courier New"'><dfn element>Event</dfn></span></b></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -491,7 +599,7 @@ MPD events carry the similar data model as the inband event. However they are ca
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'>@presentationTime</span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="Event">@<dfn>presentationTime</dfn></dl></span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -538,7 +646,7 @@ MPD events carry the similar data model as the inband event. However they are ca
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'>@duration</span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="Event">@<dfn>duration</dfn></dl></span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -602,7 +710,7 @@ MPD events carry the similar data model as the inband event. However they are ca
     element shall have the same value for this attribute. </span></p>
     <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
     page-break-after:avoid'><span style='font-size:8.0pt'>The scope of the </span><span
-    style='font-size:8.0pt;font-family:"Courier New"'>@id</span><span
+    style='font-size:8.0pt;font-family:"Courier New"'>@<dl dfn-type="element-attr" dfn-for="Event"><dfn>id</dfn></dl></span><span
     style='font-size:8.0pt'> for each Event is with the same </span><span
     style='font-size:8.0pt;font-family:"Courier New"'>@schemeIdURI</span><span
     style='font-size:8.0pt'> and </span><span style='font-size:8.0pt;
@@ -631,7 +739,7 @@ MPD events carry the similar data model as the inband event. However they are ca
     <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'>@messageData</span></p>
+    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="Event">@<dfn>messageData</dfn></dl></span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -711,7 +819,7 @@ calculated using values in its <{EventStream}> and <{Event}> elements:
 
 <figure>
 
-  $$PT = \frac{Event@presentationTime}{EventStream@timescale}$$
+  $$PT = \frac{<{Event/presentationTime}>}{<{EventStream/timescale}>}$$
   <figcaption>Equation 2: Event Start Time of a MPD event
 </figcaption></figure>
 
@@ -742,10 +850,11 @@ constraints is maintained for CMAF Chunks.
 
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
 
-- <var>scheme_id</var> = timed metadata track URI
-- <var>timescale</var> = timed metadata track timescale
-- <var>duration</var> = timed metadata sample duration
-- <var>message_data</var> = timed metadata sample data in mdat
+- <var>scheme_id</var> = <dfn>timed metadata track URI</dfn>
+- <var>timescale</var> = <dfn>timed metadata track timescale</dfn>
+- <var>PT</var> = <dfn>timed metadata sample presentation time</dfn>
+- <var>duration</var> = <dfn>timed metadata sample duration</dfn>
+- <var>message_data</var> = <dfn>timed metadata sample data in mdat</dfn>
 
 # Event and Timed Metadata dispatch timing modes # {#event-metadata-dispatch}
 
@@ -872,177 +981,213 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
 
       - In the case of an MPD Event, <var>instanceData</var> shall contain the
         values the following parameter from the <{EventStream}> and
-        <{Event}> elements :
+        <{Event}> elements:
 
-<table>
+<figure>
+<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width="99%"
+   style='width:99.2%;border-collapse:collapse;border:none'>
 <thead>
 <tr class="header">
-<th></th>
-<th></th>
-<th>‘[=on-receive=]’</th>
-<th>‘[=On-start=]’</th>
+<th width="2%" valign=top style='width:50%;border-top:solid black 1.0pt;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>Attribute</th>
+<th width="2%" valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>‘[=On-receive=]’</th>
+<th width="2%" valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>‘[=On-start=]’</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td><strong>eventData attribute</strong></td>
-<td><strong>Source/Parent element</strong></td>
-<td></td>
-<td></td>
-</tr>
 <tr class="even">
-<td>@schemeIdUri</td>
-<td><strong>MPD.Period.EventStream</strong></td>
-<td><strong>N</strong></td>
-<td><strong>N</strong></td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{EventStream/schemeIdUri}></td>
+
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>N</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="odd">
-<td>@value</td>
-<td><strong>MPD.Period.EventStream</strong></td>
-<td><strong>N</strong></td>
-<td><strong>N</strong></td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{EventStream/value}></td>
+
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>N</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="even">
-<td>@timescale</td>
-<td><strong>MPD.Period.EventStream</strong></td>
-<td><strong>Y</strong></td>
-<td><strong>N</strong></td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{EventStream/timescale}></td>
+
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="odd">
-<td>@presentationTime</td>
-<td><strong>MPD.Period.EventStream.Event</strong></td>
-<td><strong>Y</strong></td>
-<td><strong>N</strong></td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{Event/presentationTime}></td>
+
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="even">
-<td>@duration</td>
-<td><strong>MPD.Period.EventStream.Event</strong></td>
-<td><strong>Y</strong></td>
-<td><strong>N</strong></td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{Event/duration}></td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="odd">
-<td>@id</td>
-<td><strong>MPD.Period.EventStream.Event</strong></td>
-<td><strong>Y</strong></td>
-<td><strong>N</strong></td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{Event/id}></td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="even">
-<td>@messageData</td>
-<td><strong>MPD.Period.EventStream.Event</strong></td>
-<td><strong>Y</strong></td>
-<td><strong>Y</strong></td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{Event/messageData}></td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
 </tr>
 <tr class="odd">
-<td>otherEventAttributes</td>
-<td>XML notation of attributes matching xs:anyAttribute of <strong>Event</strong></td>
-<td>Y</td>
-<td>Y</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>otherEventAttributes</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
 </tr>
 <tr class="even">
-<td>otherEventElements</td>
-<td>XML notation of elements matching xs:any of <strong>Event</strong></td>
-<td>Y</td>
-<td>Y</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>otherEventElements</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+</tr>
+<tr class="even">
+<td colspan="3" align="left" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y= Yes, N= NO, O= Optional</td>
 </tr>
 </tbody>
 </table>
+ <figcaption>MPD Event parameters' support in the API</figcaption>
+</figure>
 
-> Y= Yes, N= NO, O= Optional
 
   - In the case of an inband Event, for either emsg version 0 or 1,
     <var>instanceData</var> shall contain the values of the following parameters from the emsg box:
 
-<table>
+<figure>
+<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width="99%"
+   style='width:99.2%;border-collapse:collapse;border:none'>
 <thead>
 <tr class="header">
-<th></th>
-<th>‘[=On-receive=]’</th>
-<th>‘[=On-start=]’</th>
+<th width="2%" valign=top style='width:50%;border-top:solid black 1.0pt;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>Data Field</th>
+<th width="2%" valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>‘[=On-receive=]’</th>
+<th width="2%" valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>‘[=On-start=]’</th>
 </tr>
 </thead>
+
 <tbody>
+
 <tr class="odd">
-<td>scheme_id_uri</td>
-<td>O</td>
-<td>O</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>[=scheme_id_uri=]</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>N</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
+</tr>
+
+<tr class="even">
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=value=]</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>N</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>N</td>
+</tr>
+
+<tr class="odd">
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timescale=]</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="even">
-<td>value</td>
-<td>O</td>
-<td>O</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=presentation_time=]</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="odd">
-<td>timescale</td>
-<td>Y</td>
-<td>N</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=event_duration=]</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="even">
-<td>presentation_time</td>
-<td>Y</td>
-<td>N</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=id=]</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="odd">
-<td>event_duration</td>
-<td>Y</td>
-<td>N</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=message_data()=]</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
 </tr>
 <tr class="even">
-<td>id</td>
-<td>Y</td>
-<td>N</td>
-</tr>
-<tr class="odd">
-<td>message_data()</td>
-<td>Y</td>
-<td>Y</td>
+<td colspan="3" align="left" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y= Yes, N= NO, O= Optional</td>
 </tr>
 </tbody>
 </table>
-
- > Y= Yes, N= NO, O= Optional
+  <figcaption>Inband event parameters' support in the API</figcaption>
+</figure>
 
   - In the case of a timed metadata sample, <var>instanceData</var> shall contain the values of the following parameters of the timed metadata sample:
 
-<table>
+<figure>
+<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width="99%"
+   style='width:99.2%;border-collapse:collapse;border:none'>
 <thead>
 <tr class="header">
-<th></th>
-<th>‘[=On-receive=]’</th>
-<th>‘[=On-start=]’</th>
+<th  valign=top style='width:50%;border-top:solid black 1.0pt;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>Parameter</th>
+<th  valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>‘[=On-receive=]’</th>
+<th valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>‘[=On-start=]’</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>scheme_id_uri</td>
-<td>N</td>
-<td>N</td>
+<td  valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timed metadata track URI=]</td>
+<td align="center"  valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>N</td>
+<td align="center"  valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="even">
-<td>timescale</td>
-<td>Y</td>
-<td>N</td>
+<td valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timed metadata track timescale=]</td>
+<td align="center" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="odd">
-<td>presentation_time offset</td>
-<td>Y</td>
-<td>N</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timed metadata sample presentation time=]</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="even">
-<td>Sample duration</td>
-<td>Y</td>
-<td>N</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timed metadata sample duration=]</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
 </tr>
 <tr class="odd">
-<td>Sample mdat data</td>
-<td>Y</td>
-<td>Y</td>
+<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timed metadata sample data in mdat=]</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+</tr>
+<tr class="even">
+<td colspan="3" align="left" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y= Yes, N= NO, O= Optional</td>
 </tr>
 </tbody>
 </table>
+<figcaption>Timed metadata parameters' support in the API</figcaption>
+</figure>
 
-> Y= Yes, N= NO, O= Optional
-
-Note:  In the case of ‘emsg’ version 0, the DASH player is expected to calculate <var>presentation_time</var> from <var>presentation_time_delta</var>.
+Note:  In the case of ‘emsg’ version 0, the DASH player is expected to calculate [=presentation_time=] from [=presentation_time_delta=].
 
 In order to remove a listener the **unsubscribeEvent()** function is
 called with the following arguments:
