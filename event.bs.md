@@ -33,57 +33,56 @@ Abstract: None
 
 # DASH player architecture for processing the event and timed metadata # {#event-architecture}
 
-Figure 1 demonstrates a generic architecture of the DASH player including the event and timed metadata processing models.
+Figure 1 demonstrates a generic architecture of the DASH player including the Event and timed metadata processing models.
 
 <figure>
 	<img src="Images/eventclientarch.png" />
-    <figcaption>The DASH player architecture including the inband event and Application related timed metadata handling</figcaption>
+    <figcaption>The DASH player architecture including the inband Event and Application-related timed metadata handling</figcaption>
 </figure>
 
 In the above figure:
 
 1. DASH player processes the MPD. If the manifest
-    includes any MPD events, it parses them and append them to event & timed metadata buffer.
+    includes any MPD Events, it parses them and appends them to the Event & Timed Metadata Buffer.
 
-2. Based on the MPD, DASH player manages fetching and parsing the Segments before appending them into the media decoder input buffer.
+2. Based on the MPD, DASH player manages fetching and parsing the Segments before appending them into the media decoder input buffer (named 'Media Buffer' in the Figure 1).
 
 3. Parsing a Segment includes:
     
-    1. parse the high-level boxes such as index (sidx) &
-        event message boxes, and append event message boxes to event & metadata buffer.
-    2. For application related  timed metadata track, extracting data samples, and append them to event &metadata buffer.
-    3. For media segment, parse the segments and append them to media buffer.
+    1. parse the high-level boxes such as Segment Index (sidx) and Event Message boxes, and append Event Message boxes to the Event & Metadata Buffer.
+    2. For an Application-related timed metadata track, extracting the data samples, and appending them to the Event & Metadata Buffer.
+    3. For media segments, parse the segments and append them to Media Buffer.
 
-4.  The DASH events are passed to the DASH player control, while the Application events and timed metadata are passed to the event & metadata synchronization and dispatch module.
+4.  The DASH player-specific Events are passed to the DASH player control function (named 'DASH Client Control, Selection & Heuristic Logic' in Figure 1), while the Application-related Events and timed metadata track samples are passed to the Event & Metadata Synchronizer and Dispatcher function.
 
-5. If App is subscribed to a specific event scheme or timed metadata stream, dispatch those instances of
+5. If an Application is subscribed to a specific Event scheme or timed metadata stream, dispatch those instances of
     scheme or stream, according to the dispatch mode:
-    1. For [=On-receive=] dispatch mode, dispatch the events and metadata samples as soon as they are received.
-    2. For [=On-start=] dispatch mode, dispatch the events and metadata samples at their associated presentation time, using the synchronization signal from media decoder.
+    1. For [=On-receive=] dispatch mode, dispatch the Event information or timed metadata samples as soon as they are received.
+    2. For [=On-start=] dispatch mode, dispatch the Event information or timed metadata samples at their associated presentation time, using the synchronization signal from the media decoder.
 
 # Event and Timed metadata data timing # {#event-metadata-timing}
 
-## Inband event timing parameters ## {#Inband-event-timing}
+## Inband Event timing parameters ## {#Inband-event-timing}
 
-Figure 2 presents the timing of an event in the media timeline:
+Figure 2 presents the timing of an inband Event along the media timeline:
 <figure>
 	<img src="Images/inbandeventtiming.png" />
     <figcaption>The inband event timing parameter on the media timeline</figcaption>
 </figure>
 
-As shown in Figure 2, every inband event can be described with 3 timing parameters on the media timeline:
+As shown in Figure 2, every inband Event can be described with three timing parameters on the media timeline:
 
-1. Event Received Time (<var>RT</var>) which is the earliest presentation time of the Segment containing the event box.
+1. Event Received Time (<var>RT</var>) which is the earliest presentation time of the Segment containing the Event Message box.
 
-2. Event Presentation/Start Time (<var>PT</var>) which is the moment in the media timeline that event becomes active.
+2. Event Presentation/Start Time (<var>PT</var>) which is the moment in the media timeline that the Event becomes active.
 
-3. Event duration (<var>DU</var>): the duration for which the event is active
+3. Event duration (<var>DU</var>): the duration for which the Event is active
 
-An inband event is inserted in the beginning of a Segment. Since each media segment has an earliest presentation time (<var>RT</var>), <var>RT</var> of the Segment carrying the event box can be considered as the location of the event box in the media timeline. DASH player has to fetch and parse the Segment before or at its <var>RT</var> (at <var>RT</var> only if the decoding and rendering of the segment takes no delay). Therefore, the event inserted in a Segment at its <var>RT</var> time will be ready to be processed and fetched no later than <var>RT</var> in the media timeline.
+An inband Event is inserted in the beginning of a Segment. Since each media segment has an earliest presentation time (<var>RT</var>), <var>RT</var> of the Segment carrying the Event Message box can be considered as the location of that box on the media timeline. The DASH player has to fetch and parse the Segment before or at its <var>RT</var> (at <var>RT</var> when it's assumed that the decoding and rendering of the segment incurs practically zero delay). Therefore, the Event inserted in a Segment at its <var>RT</var> time will be ready to be processed and fetched no later than <var>RT</var> on the media timeline.
 
-The second timing parameter is Event Presentation Time (<var>PT</var> ). <var>PT</var>  is the moment in the media timeline that the event becomes active. This value can be calculated using the parameters included in event message box.
+The second timing parameter is Event Presentation Time (<var>PT</var> ). <var>PT</var> is the moment in the media timeline that the Event becomes active. This value can be calculated using the parameters included in Event Message box.
 
-The third parameter is Event Duration (<var>DU</var> ), the duration in which the event is active. <var>DU</var>  is also signaled in the event message box using a specific value.
+The third parameter is Event Duration (<var>DU</var> ), the duration for which the Event is considered to be active. <var>DU</var>  is also signaled in the Event Message box using a specific value.
 
 ## Event message box format and event timing parameters ## {#emsg-format}
 
@@ -239,9 +238,9 @@ In this document, we use the following common variable names instead of some of 
 - <var>duration</var> = [=event_duration=]
 - <var>message_data</var> = [=message_data()=]
 
-## MPD events timing model ## {#mpd-event-timing}
+## MPD Events timing model ## {#mpd-event-timing}
 
-MPD events carry the similar data model as the inband event. However they are carried in the MPD, at the Period elements. Each Period event has <{EventStream}> element(s), defining the <{EventStream/schemeIdUri}>, <{EventStream/value}> , <{EventStream/timescale}> and a sequences of <{Event}> elements. Each event may have <{Event/presentationTime}>, <{Event/duration}>, <{Event/id}> and <{Event/messageData}> attributes, as shown in Figure 4.
+MPD Events carry the similar data model as inband Events. However, the former type is are carried in the MPD, under the Period elements. Each Period event has <{EventStream}> element(s), defining the <{EventStream/schemeIdUri}>, <{EventStream/value}> , <{EventStream/timescale}> and a sequences of <{Event}> elements. Each event may have <{Event/presentationTime}>, <{Event/duration}>, <{Event/id}> and <{Event/messageData}> attributes, as shown in Figure 4.
 
 
 <figure><table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
@@ -787,23 +786,23 @@ MPD events carry the similar data model as the inband event. However they are ca
   </td>
  </tr>
 </table>
-  <figcaption>MPD event elements</figcaption>
+  <figcaption>MPD Event elements</figcaption>
 </figure>
 
 
-As is shown in Figure 5, each MPD event has 3 associated timing
-paramters in the media timeline:
+As is shown in Figure 5, each MPD Event has three associated timing
+parameters along the media timeline:
 
-1.  The Period Start Time (<var>RT</var>) containing the EventStream element.
+1.  The PeriodStart Time (<var>RT</var>) of the Period element containing the EventStream element.
 
-2.  Event Start Time (<var>PT</var>): the moment in the media timeline that event
-    becomes active and can be calculated from <{Event/PresentationTime}>.
+2.  Event Start Time (<var>PT</var>): the moment in the media timeline that a given MPD Event
+    becomes active and can be calculated from the attribute <{Event@presentationTime}>.
 
 3.  Event duration (<var>DU</var>): the duration for which the event is active that
-    can be calculated from <{Event/duration}>.
+    can be calculated from the attribute <{Event@duration}>.
 
-Note that the first parameter is inherited from the [=Period=] containing
-the [=Events=] and only the 2<sup>nd</sup> and 3<sup>rd</sup> parameters are
+Note that the first parameter is inherited from the Period containing
+the Events and only the 2<sup>nd</sup> and 3<sup>rd</sup> parameters are
 explicitly included in the <{EventStream}> element. Each <{EventStream}> also
 has <{EventStream/timescale}> to scale the above parameters.
 
