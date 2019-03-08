@@ -28,7 +28,6 @@ Abstract: None
 </dl>
 <dfn>Presentation time offset</dfn>  
 <dfn>time scale</dfn>
-<dfn>period</dfn>
 <dfn>cmaf</dfn> 
 
 # DASH player architecture for processing the event and timed metadata # {#event-architecture}
@@ -89,12 +88,11 @@ The third parameter is Event Duration (<var>DU</var> ), the duration for which t
 Figure 3 shows the emsg box format in DASH:
 
 <figure>
-<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 bgcolor="#DDDDDD"
  style='border-collapse:collapse;border:none'>
  <tr>
-  <td width=623 valign=top style='width:467.25pt;border:solid #4472C4 2.25pt;
+  <td width=623 valign=top style='width:600pt;border:solid #4472C4 2.25pt;
   padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal><span lang=DE-AT>&nbsp;</span></p>
 <table>
 <tr>
  <td colspan="4">aligned(8) class DASHEventMessageBox extends FullBox (‘emsg’, version, flags = 0){</td>
@@ -243,12 +241,12 @@ In this document, we use the following common variable names instead of some of 
 MPD Events carry the similar data model as inband Events. However, the former type is are carried in the MPD, under the Period elements. Each Period event has <{EventStream}> element(s), defining the <{EventStream/schemeIdUri}>, <{EventStream/value}> , <{EventStream/timescale}> and a sequences of <{Event}> elements. Each event may have <{Event/presentationTime}>, <{Event/duration}>, <{Event/id}> and <{Event/messageData}> attributes, as shown in Figure 4.
 
 
-<figure><table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+<figure>
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
  style='border-collapse:collapse;border:none'>
  <tr>
-  <td width=623 valign=top style='width:467.25pt;border:solid #4472C4 2.25pt;
+  <td width=623 valign=top style='width:800pt;border:solid #4472C4 2.25pt;
   padding:0in 5.4pt 0in 5.4pt'>
-  <p class=MsoNormal><span lang=DE-AT>&nbsp;</span></p>
   <table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width="99%"
    style='width:99.2%;border-collapse:collapse;border:none'>
    <tr>
@@ -969,222 +967,101 @@ Upon successful execution of the event/timed metadata subscription call
 (for which the DASH player will return a corresponding
 acknowledgment), the DASH player shall monitor the source of
 potential Event stream information, i.e., the MPD or incoming DASH
-Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>value</var>). The parentheses around value is because this parameter may be absent in the event/timed metadata subscription call. When a matching event/metadata sample is detected, the DASH player invokes the function specified in the callbackFunction argument with the following parameters. It should additionally provide to the Application the current presentation time at the DASH player when performing the dispatch action. The parameters to be passed in this method are:
-
-  - <var ignore=''>type</var> – the type of event message/timed metadata sample whose
-    scheme identifier matches the subscribed value by the Application.
-    Value of ‘mpd’ denotes an MPD Event, value of ‘inband’ denotes an
-    inband Event, and value ‘meta’ denotes a timed metadata sample.
-
-  - <var>instanceData</var> – Container for the parameter values contained in the Event message or the timed metadata sample data.
-
-      - In the case of an MPD Event, <var>instanceData</var> shall contain the
-        values the following parameter from the <{EventStream}> and
-        <{Event}> elements:
+Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>value</var>). The parentheses around value is because this parameter may be absent in the event/timed metadata subscription call. When a matching event/metadata sample is detected, the DASH player invokes the function specified in the callbackFunction argument with the following parameters. It should additionally provide to the Application the current presentation time at the DASH player when performing the dispatch action. The parameters to be passed in this method are shown in table below:
 
 <figure>
-<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width="99%"
-   style='width:99.2%;border-collapse:collapse;border:none'>
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse;border:none'>
+ <tr>
+  <td valign=top style='width:800pt;border:solid #FFFFFF 1pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+<table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" width="99%" style="width: 99.2%; border-collapse: collapse; border: none;">
 <thead>
-<tr class="header">
-<th width="2%" valign=top style='width:50%;border-top:solid black 1.0pt;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>Attribute</th>
-<th width="2%" valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>‘[=On-receive=]’</th>
-<th width="2%" valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-    padding:0in 5.4pt 0in 5.4pt'>‘[=On-start=]’</th>
+<tr class="header" style="height: 41px;">
+<th  style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle; width: 25%;">MPD event</th>
+<th style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle; width: 25%;">Inband emsg</th>
+<th style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle; width: 25%;">Metadata</th>
+<th style="width: 10%; border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle;">Data Type</th>
+<th  valign="top" style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: center; vertical-align: middle; width: 40px;">&lsquo;[=On-receive=]&rsquo;</th>
+<th  valign="top" style="padding: 0in 5.4pt; border: 1pt solid black; height: 41px; text-align: center; vertical-align: middle; width: 40px;">&lsquo;[=On-start=]&rsquo;</th>
 </tr>
 </thead>
 <tbody>
-<tr class="even">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{EventStream/schemeIdUri}></td>
-
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
+<tr class="even" style="height: 21px;">
+<td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/schemeIdUri}&gt;</td>
+<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=scheme_id_uri=]</td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata track URI=]</span></td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>&nbsp;</span></td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">N</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
 </tr>
-<tr class="odd">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{EventStream/value}></td>
-
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
+<tr class="odd" style="height: 21px;">
+<td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/value}&gt;</td>
+<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=value=]</td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"></td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"></td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">N</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
 </tr>
-<tr class="even">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{EventStream/timescale}></td>
-
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
+<tr class="even" style="height: 21px;">
+<td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/timescale}&gt;</td>
+<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=timescale=]</td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata track timescale=]</span></td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(32)</span></td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
 </tr>
-<tr class="odd">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{Event/presentationTime}></td>
-
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
+<tr class="odd" style="height: 21px;">
+<td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/presentationTime}&gt;</td>
+<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=presentation_time=]</td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample presentation time=]</span></td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(64)</span></td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
 </tr>
-<tr class="even">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{Event/duration}></td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
+<tr class="even" style="height: 21px;">
+<td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/duration}&gt;</td>
+<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=event_duration=]</td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample duration=]</span></td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(32)</span></td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
 </tr>
-<tr class="odd">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{Event/id}></td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
+<tr class="odd" style="height: 21px;">
+<td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/id}&gt;</td>
+<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=id=]</td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"></td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(32)</span></td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
 </tr>
-<tr class="even">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'><{Event/messageData}></td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<tr style="height: 41px;">
+<td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 41px;">messageSize*</td>
+<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 41px;">messageSize*</td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 41px;">messageSize*</td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 41px;"><span>unsigned int(64)</span></td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
 </tr>
-<tr class="odd">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>otherEventAttributes</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
 </tr>
-<tr class="even">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>otherEventElements</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
+<tr class="even" style="height: 21px;">
+<td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/messageData}&gt;</td>
+<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=message_data()=]</td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample data in mdat=]</span></td>
+<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(8) x messageSize</span></td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
 </tr>
-<tr class="even">
-<td colspan="3" align="left" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y= Yes, N= NO, O= Optional</td>
-</tr>
-</tbody>
-</table>
- <figcaption>MPD Event parameters' support in the API</figcaption>
-</figure>
-
-
-  - In the case of an inband Event, for either emsg version 0 or 1,
-    <var>instanceData</var> shall contain the values of the following parameters from the emsg box:
-
-<figure>
-<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width="99%"
-   style='width:99.2%;border-collapse:collapse;border:none'>
-<thead>
-<tr class="header">
-<th width="2%" valign=top style='width:50%;border-top:solid black 1.0pt;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>Data Field</th>
-<th width="2%" valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>‘[=On-receive=]’</th>
-<th width="2%" valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-    padding:0in 5.4pt 0in 5.4pt'>‘[=On-start=]’</th>
-</tr>
-</thead>
-
-<tbody>
-
-<tr class="odd">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>[=scheme_id_uri=]</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>N</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-</tr>
-
-<tr class="even">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=value=]</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>N</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-    padding:0in 5.4pt 0in 5.4pt'>N</td>
-</tr>
-
-<tr class="odd">
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timescale=]</td>
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-</tr>
-<tr class="even">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=presentation_time=]</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-</tr>
-<tr class="odd">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=event_duration=]</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-</tr>
-<tr class="even">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=id=]</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-</tr>
-<tr class="odd">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=message_data()=]</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-</tr>
-<tr class="even">
-<td colspan="3" align="left" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y= Yes, N= NO, O= Optional</td>
+<tr class="even" style="height: 21px;">
+<td colspan="6" align="left" width="2%" valign="top" style="border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px; width: 55.0001%;">Y= Yes, N= NO, O= Optional<br>* messageSize = the size of messageData/message_data/metadata sample data in bytes.</td>
 </tr>
 </tbody>
 </table>
-  <figcaption>Inband event parameters' support in the API</figcaption>
-</figure>
-
-  - In the case of a timed metadata sample, <var>instanceData</var> shall contain the values of the following parameters of the timed metadata sample:
-
-<figure>
-<table class=MsoNormalTable border=1 cellspacing=0 cellpadding=0 width="99%"
-   style='width:99.2%;border-collapse:collapse;border:none'>
-<thead>
-<tr class="header">
-<th  valign=top style='width:50%;border-top:solid black 1.0pt;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>Parameter</th>
-<th  valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>‘[=On-receive=]’</th>
-<th valign=top style='width:15%;border-top:solid black 1.0pt;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-    padding:0in 5.4pt 0in 5.4pt'>‘[=On-start=]’</th>
 </tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td  valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timed metadata track URI=]</td>
-<td align="center"  valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-<td align="center"  valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-</tr>
-<tr class="even">
-<td valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timed metadata track timescale=]</td>
-<td align="center" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-</tr>
-<tr class="odd">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timed metadata sample presentation time=]</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-</tr>
-<tr class="even">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timed metadata sample duration=]</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>N</td>
-</tr>
-<tr class="odd">
-<td width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>[=timed metadata sample data in mdat=]</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-<td align="center" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y</td>
-</tr>
-<tr class="even">
-<td colspan="3" align="left" width="2%" valign=top style='width:2.52%;border-top:none;border-left:     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;     padding:0in 5.4pt 0in 5.4pt'>Y= Yes, N= NO, O= Optional</td>
-</tr>
-</tbody>
 </table>
-<figcaption>Timed metadata parameters' support in the API</figcaption>
+<figcaption>Event/timed metadata API parameters and datatypes</figcaption>
 </figure>
+
 
 Note:  In the case of ‘emsg’ version 0, the DASH player is expected to calculate [=presentation_time=] from [=presentation_time_delta=].
 
