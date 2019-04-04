@@ -30,13 +30,13 @@ Abstract: None
 <dfn>time scale</dfn>
 <dfn>cmaf</dfn> 
 
-# DASH player architecture for processing the event and timed metadata # {#event-architecture}
+# DASH player architecture for processing DASH events and timed metadata tracks # {#event-architecture}
 
-Figure 1 demonstrates a generic architecture of the DASH player including the Event and timed metadata processing models.
+Figure 1 demonstrates a generic architecture of the DASH player including DASH Events and timed metadata tracks processing models.
 
 <figure>
 	<img src="Images/eventclientarch.png" />
-    <figcaption>Figure 1: The DASH player architecture including the inband Event and Application-related timed metadata handling</figcaption>
+    <figcaption>Figure 1: DASH player architecture including the inband Event and Application-related timed metadata handling</figcaption>
 </figure>
 
 In the above figure:
@@ -54,12 +54,11 @@ In the above figure:
 
 4.  The DASH player-specific Events are passed to the DASH player control function (named 'DASH Client Control, Selection & Heuristic Logic' in Figure 1), while the Application-related Events and timed metadata track samples are passed to the Event & Metadata Synchronizer and Dispatcher function.
 
-5. If an Application is subscribed to a specific Event scheme or timed metadata stream, dispatch those instances of
-    scheme or stream, according to the dispatch mode:
-    1. For [=On-receive=] dispatch mode, dispatch the Event information or timed metadata samples as soon as they are received.
+5. If an Application is subscribed to a specific Event or timed metadata stream, dispatch the corresponding event instances or timed metadata samples, according to the dispatch mode:
+    1. For [=On-receive=] dispatch mode, dispatch the Event information or timed metadata samples as soon as they are received(or no later than <var>AT</var>).
     2. For [=On-start=] dispatch mode, dispatch the Event information or timed metadata samples at their associated presentation time, using the synchronization signal from the media decoder.
 
-# Event and Timed metadata data timing # {#event-metadata-timing}
+# Event and Timed metadata sample timing models # {#event-metadata-timing}
 
 ## Inband Event timing parameters ## {#Inband-event-timing}
 
@@ -71,15 +70,15 @@ Figure 2 presents the timing of an inband Event along the media timeline:
 
 As shown in Figure 2, every inband Event can be described with three timing parameters on the media timeline:
 
-1. Event Received Time (<var>RT</var>) which is the earliest presentation time of the Segment containing the Event Message box.
+1. Event Arrival Time (<var>AT</var>) which is the earliest presentation time of the Segment containing the Event Message box.
 
-2. Event Presentation/Start Time (<var>PT</var>) which is the moment in the media timeline that the Event becomes active.
+2. Event Presentation/Start Time (<var>ST</var>) which is the moment in the media timeline that the Event becomes active.
 
 3. Event duration (<var>DU</var>): the duration for which the Event is active
 
-An inband Event is inserted in the beginning of a Segment. Since each media segment has an earliest presentation time (<var>RT</var>), <var>RT</var> of the Segment carrying the Event Message box can be considered as the location of that box on the media timeline. The DASH player has to fetch and parse the Segment before or at its <var>RT</var> (at <var>RT</var> when it's assumed that the decoding and rendering of the segment incurs practically zero delay). Therefore, the Event inserted in a Segment at its <var>RT</var> time will be ready to be processed and fetched no later than <var>RT</var> on the media timeline.
+An inband Event is inserted in the beginning of a Segment. Since each media segment has an earliest presentation time equal to (<var>AT</var>), <var>AT</var> of the Segment carrying the Event Message box can be considered as the location of that box on the media timeline. The DASH player has to fetch and parse the Segment before or at its <var>AT</var> (at <var>AT</var> when it's assumed that the decoding and rendering of the segment incurs practically zero delay). Therefore, the Event inserted in a Segment at its <var>AT</var> time will be ready to be processed and fetched no later than <var>AT</var> on the media timeline.
 
-The second timing parameter is Event Presentation Time (<var>PT</var> ). <var>PT</var> is the moment in the media timeline that the Event becomes active. This value can be calculated using the parameters included in Event Message box.
+The second timing parameter is Event Presentation/Start Time (<var>ST</var> ). <var>ST</var> is the moment in the media timeline that the Event becomes active. This value can be calculated using the parameters included in Event Message box.
 
 The third parameter is Event Duration (<var>DU</var> ), the duration for which the Event is considered to be active. <var>DU</var>  is also signaled in the Event Message box using a specific value.
 
@@ -204,15 +203,15 @@ Table 1 shows the emsg box format in DASH:
 
 
 
-The <var>PT</var> of an event can be calculated using values in its emsg box:
+The <var>ST</var> of an event can be calculated using values in its emsg box:
 
 
 <figure>
 
-$$PT = \begin{cases}
-RT + \frac{presentation\_time\_delta}{timescale} \space
+$$ST = \begin{cases}
+AT + \frac{presentation\_time\_delta}{timescale} \space
 \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad  version=0\\ 
-PeriodStart -  \frac{<{SegmentBase/presentationTimeOffset}>}{<{SegmentBase/timescale}>} + \frac{presentation\_time}{timescale}\qquad \qquad version=1
+PeriodStart +  \frac{<{SegmentBase/presentationTimeOffset}>}{<{SegmentBase/timescale}>} + \frac{presentation\_time}{timescale}\qquad \qquad version=1
 \end{cases}
 $$
 
@@ -222,13 +221,15 @@ $$
 
 Where <var>PeriodStart</var> is the corresponding Period‘s start time, and <{SegmentBase/presentationTimeoffset}> and <{SegmentBase/timescale}> are the [=Presentation Time Offset=] (PTO) and [=time scale=] of the corresponding Represenation.
 
-Note: <var>PT</var> is always equal to or larger than <var>RT</var> in both versions of emsg.
+Note: <var>ST</var> is always equal to or larger than <var>AT</var> in both versions of emsg.
 
-Note: Since the media sample timescales might be different than emsg's timescale, <var>PT</var> might not line up with a media sample if different timescales are used.
+Note: Since the media sample timescales might be different than emsg's timescale, <var>ST</var> might not line up with a media sample if different timescales are used.
 
 Note: If various Adaptation Sets carry the same events, different
 Adaptation Sets/Representations with different PTOs, the
 [=presentation_time_delta=] and/or [=presentation_time=] values might be different per Adaptation Set/Representation, i.e. the same emsg box can not be replicated over multiple Representations and/or Adaptations Sets.
+
+Note: In the case of [=CMAF=], <var>PeriodStart</var> is the CMAF track's earliest presentation time.
 
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
 
@@ -791,9 +792,9 @@ MPD Events carry the similar data model as inband Events. However, the former ty
 As is shown in Figure 3, each MPD Event has three associated timing
 parameters along the media timeline:
 
-1.  The PeriodStart Time (<var>RT</var>) of the Period element containing the EventStream element.
+1.  The PeriodStart Time (<var>AT</var>) of the Period element containing the EventStream element.
 
-2.  Event Start Time (<var>PT</var>): the moment in the media timeline that a given MPD Event
+2.  Event Start Time (<var>ST</var>): the moment in the media timeline that a given MPD Event
     becomes active and can be calculated from the attribute <{Event@presentationTime}>.
 
 3.  Event duration (<var>DU</var>): the duration for which the event is active that
@@ -801,7 +802,7 @@ parameters along the media timeline:
 
 Note that the first parameter is inherited from the Period containing
 the Events and only the 2<sup>nd</sup> and 3<sup>rd</sup> parameters are
-explicitly included in the <{EventStream}> element. Each <{EventStream}> also
+explicitly included in the <{Event}> element. Each <{EventStream}> also
 has <{EventStream/timescale}> to scale the above parameters.
 
 Figure 3 demonstrates these parameters in the media timeline.
@@ -811,12 +812,12 @@ Figure 3 demonstrates these parameters in the media timeline.
 </figcaption></figure>
 
 
-The <var>PT</var> of a MPD event relative to the <var>PeriodStart</var> time can be
+The <var>ST</var> of an MPD event can be
 calculated using values in its <{EventStream}> and <{Event}> elements:
 
 <figure>
 
-  $$PT = \frac{<{Event/presentationTime}>}{<{EventStream/timescale}>}$$
+  $$ST = PeriodStart + \frac{<{Event/presentationTime}>}{<{EventStream/timescale}>}$$
   <figcaption>Equation 2: Event Start Time of MPD event
 </figcaption></figure>
 
@@ -829,17 +830,17 @@ In this document, we use the following common variable names instead of some of 
 - <var>id</var> = <{Event/id}>
 - <var>message_data</var> = <{Event/messageData}>
 
-## Simple timed metadata timing model ## {#timed-metadata-timing}
+## Timed metadata sample timing model ## {#timed-metadata-timing}
 
-Figure 4 shows the timing model for timed metadata.
+Figure 4 shows the timing model for a given timed metadata sample.
 <figure>
   <img src="Images/timedmetadataeventtiming.png" />
-  <figcaption>Figure 4: The timed metadata timing parameters on the media timeline
+  <figcaption>Figure 4: Timing parameters of a timed metadata sample on the media timeline
 </figcaption></figure>
 
 As shown in this figure, the metadata sample timing including metadata
-sample presentation time (<var>PT</var>) and metadata sample duration (<var>DU</var>). Also
-one or multiple metadata samples are included in a segment with Segment start time (<var>RT</var>).
+sample presentation time (<var>ST</var>) and metadata sample duration (<var>DU</var>). Also
+one or multiple metadata samples are included in a segment with Segment start time (<var>AT</var>).
 
 Note that the metadata sample duration can not go beyond segment
 duration, i.e. to the next segment. In the case of [=CMAF=], the same
@@ -848,25 +849,24 @@ constraints is maintained for CMAF Chunks.
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
 
 - <var>scheme_id</var> = <dfn>timed metadata track URI</dfn>
-- <var>timescale</var> = <dfn>timed metadata track timescale</dfn>
-- <var>PT</var> = <dfn>timed metadata sample presentation time</dfn>
+- <var>timescale</var> = <dfn>timed metadata track timescale</dfn> in mdhd box.
+- <var>ST</var> = <dfn>timed metadata sample presentation time</dfn>
 - <var>duration</var> = <dfn>timed metadata sample duration</dfn>
 - <var>message_data</var> = <dfn>timed metadata sample data in mdat</dfn>
 
-# Event and Timed Metadata dispatch timing modes # {#event-metadata-dispatch}
+# Events and timed metadata sample dispatch timing modes # {#event-metadata-dispatch}
 
-Figure 5 shows two possible dispatch timing models for inband events.
-
+Figure 5 shows two possible dispatch timing models for DASH events and timed metadata samples.
 <figure>
-  <img src="Images/dispatchmodes.png" />
+  <img src="Images/eventtimedmetadatadispatchmodes.png" />
   <figcaption>Figure 5: The Application events and timed metadata dispatch modes
 </figcaption></figure>
 
 In this figure, two modes are shown:
 
-1. <dfn>On-receive</dfn> Dispatch Mode: Dispatching at <var>RT</var> or earlier. Since the segment carrying an emsg/metadata sample has to be parsed before (or assuming zero decode/rendering delay as the latest at) <var>RT</var> on the media timeline, the event/metadata sample shall be dispatched at this time or before to Application in this mode. Application has a duration of <var>PT</var>-<var>RT</var> for preparing for the event. In this mode, the client doesn’t need to maintain states of Application events or metadata samples either. Application may have to maintain the state for any event/metadata sample, its <var>PT</var> and  <var>DU</var>, and monitor its activation duration, if it needs to. Application also needs to schedule each event/sample at its <var>PT</var>, so it must be time-aware to properly make use of these timing parameters.
+1. <dfn>On-receive</dfn> Dispatch Mode: Dispatching at <var>AT</var> or earlier. Since the segment carrying an emsg/metadata sample has to be parsed before (or assuming zero decode/rendering delay as the latest at) <var>AT</var> on the media timeline, the event/metadata sample shall be dispatched at this time or before to Application in this mode. Application has a duration of <var>ST</var>-<var>AT</var> for preparing for the event. In this mode, the client doesn’t need to maintain states of Application events or metadata samples either. Application may have to maintain the state for any event/metadata sample, its <var>ST</var> and  <var>DU</var>, and monitor its activation duration, if it needs to. Application also needs to schedule each event/sample at its <var>ST</var>, so it must be time-aware to properly make use of these timing parameters.
 
-2. <dfn>On-start</dfn> Dispatch Mode: Dispatching exactly at <var>PT</var>, which is the start/presentation time of the event/metadata sample. The DASH player shall calculate the <var>PT</var> for each parsed event/metadata sample and dispatch the <var>message_data</var> at this exact moment. In this mode, since Application receives the event/sample at its start/presentation time, it needs to act on the received data right away, i.e. no advanced notice is given to Application in this mode. Application however may not need to maintain a state for the events and timed metadata samples, if the durations and/or the sequence and order of events/samples are not important to Application. Depending on the nature, meaning and relationship between different event instances/metadata samples, Application may need to maintain the state for them.
+2. <dfn>On-start</dfn> Dispatch Mode: Dispatching exactly at <var>ST</var>, which is the start/presentation time of the event/metadata sample. The DASH player shall calculate the <var>ST</var> for each parsed event/metadata sample and dispatch the <var>message_data</var> at this exact moment. In this mode, since Application receives the event/sample at its start/presentation time, it needs to act on the received data right away, i.e. no advanced notice is given to Application in this mode. Application however may not need to maintain a state for the events and timed metadata samples, if the durations and/or the sequence and order of events/samples are not important to Application. Depending on the nature, meaning and relationship between different event instances/metadata samples, Application may need to maintain the state for them.
 
 ## The Dispatch Processing Model ## {#dispatch-processing}
 
@@ -890,30 +890,30 @@ The DASH player shall implement the following process:
 
 ### [=On-receive=] processing   ### {#on-receive-proc}
 The DASH player shall implement the following process when <var>dispatch_mode</var> = <var>on_receive</var>:
-- Dispatch the event/timed metadata, including <var>PT</var>, <var>id</var>, <var>DU</var>, <var>timescale</var> and <var>message_data</var> as described in [[#prose-event-API]].
+- Dispatch the event/timed metadata, including <var>ST</var>, <var>id</var>, <var>DU</var>, <var>timescale</var> and <var>message_data</var> as described in [[#prose-event-API]].
 
 ### [=On-start=] processing  ### {#on-start-proc}
 The DASH player shall implement the following process when <var>dispatch_mode</var> = <var>on_start</var>:
-1. Derive the event instance/metadata sample's <var>PT</var> 
+1. Derive the event instance/metadata sample's <var>ST</var> 
 
-2. If the current presentation time value is smaller than <var>PT</var>, then go to Step 5.
+2. If the current presentation time value is smaller than C, then go to Step 5.
 
-3. Derive the ending time <var>ET</var>= <var>PT</var> + <var>DU</var>.
+3. Derive the ending time <var>ET</var>= <var>ST</var> + <var>DU</var>.
 
 4. If  the current presentation time value is greater than <var>ET</var>, then end processing.
 
-5. In the case of event: Compare the event's <var>id</var> with the entries of [=Active Event Table=] of the same <var>scheme_uri</var>/(<var>value</var>:
+5. In the case of event: Compare the event's <var>id</var> with the entries of [=Active Event Table=] of the same <var>scheme_uri</var>/(<var>value</var> pair:
     - If an entry with the identical <var>id</var> value exists, end processing;
      - If not, add emsg’s <var>id</var> to the corresponding [=Active Event Table=].
 
-6. Dispatch the event/metadata <var>message_data</var> as described in [[#prose-event-API]]. 
+6. Dispatch the event/metadata <var>message_data</var> at time <var>ST</var>, or immediately if current presentation time is larger then <var>ST</var>,  as described in [[#prose-event-API]]. 
 
 ## The event/metadata buffer model ## {#event-metadata-buffer-model}
 
-Along with the media samples, the event instances and metadata samples
+Along with the media samples, the event instances and timed metadata samples
 are buffered. The event/metadata buffer should be managed with same
 scheme as the media buffer, i.e. as long as a media sample exists in the
-media buffer, the corresponding event and/or metadata samples should be
+media buffer, the corresponding events and/or metadata samples should be
 maintained in the event/metadata buffer.
 
 # Prose description of APIs # {#prose-event-API}
@@ -1044,7 +1044,7 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
 <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
 </tr>
 <tr class="even" style="height: 21px;">
-<td colspan="6" align="left" width="2%" valign="top" style="border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px; width: 55.0001%;">Y= Yes, N= NO, O= Optional<br>* messageSize = the size of messageData/message_data/metadata sample data in bytes.</td>
+<td colspan="6" align="left" width="2%" valign="top" style="border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px; width: 55.0001%;">Y= Yes, N= NO, O= Optional</td>
 </tr>
 </tbody>
 </table>

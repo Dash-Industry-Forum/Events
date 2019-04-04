@@ -105,7 +105,7 @@ Parser<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:Mod
           <y:Geometry height="33.0" width="111.0" x="502.5" y="287.5"/>
           <y:Fill color="#B5C6E7" transparent="false"/>
           <y:BorderStyle color="#90AADB" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#305497" verticalTextPosition="bottom" visible="true" width="99.390625" x="5.8046875" xml:space="preserve" y="-0.201171875">Event &amp; Metadata
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#305497" verticalTextPosition="bottom" visible="true" width="113.388671875" x="-1.1943359375" xml:space="preserve" y="-0.201171875">Event &amp; T. Metadata
 Buffer<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
@@ -128,7 +128,7 @@ Buffer<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:Mod
           <y:Geometry height="66.0" width="111.0" x="658.0" y="271.0"/>
           <y:Fill color="#B5C6E7" transparent="false"/>
           <y:BorderStyle color="#90AADB" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#305497" verticalTextPosition="bottom" visible="true" width="102.724609375" x="4.1376953125" xml:space="preserve" y="8.9482421875">Event &amp; Metadata 
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#305497" verticalTextPosition="bottom" visible="true" width="116.72265625" x="-2.861328125" xml:space="preserve" y="8.9482421875">Event &amp; T. Metadata 
 Synchronizer &amp; 
 Dispacher<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="rectangle"/>
@@ -197,7 +197,7 @@ Segments<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:M
     <node id="n15">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="34.75" width="144.0" x="387.5" y="441.0"/>
+          <y:Geometry height="34.75" width="144.0" x="372.25" y="441.0"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#006699" verticalTextPosition="bottom" visible="true" width="4.0" x="70.0" y="15.375">
@@ -215,7 +215,7 @@ Segments<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:M
     <node id="n16">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="33.0" width="93.0" x="604.5" y="442.75"/>
+          <y:Geometry height="33.0" width="93.0" x="589.25" y="442.75"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#006699" verticalTextPosition="bottom" visible="true" width="4.0" x="44.5" y="14.5">
@@ -233,7 +233,7 @@ Segments<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:M
     <node id="n17">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="10.5" width="93.0" x="613.5" y="453.125"/>
+          <y:Geometry height="10.5" width="93.0" x="598.25" y="453.125"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#FF9000" verticalTextPosition="bottom" visible="true" width="104.3447265625" x="-5.67236328125" xml:space="preserve" y="-5.32568359375">Media dataflow<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -244,7 +244,7 @@ Segments<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:M
     <node id="n18">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1.0" width="134.0" x="387.5" y="498.0"/>
+          <y:Geometry height="1.0" width="134.0" x="372.25" y="498.0"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#009933" verticalTextPosition="bottom" visible="true" width="152.6337890625" x="218.2998046875" xml:space="preserve" y="-35.80078125">Control/Synchronization<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="-0.5" labelRatioY="0.5" nodeRatioX="0.5" nodeRatioY="-0.5" offsetX="84.2998046875" offsetY="-14.6494140625" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -255,10 +255,10 @@ Segments<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:M
     <node id="n19">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="10.5" width="144.0" x="613.5" y="435.0"/>
+          <y:Geometry height="10.5" width="144.0" x="609.75" y="435.0"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#006699" verticalTextPosition="bottom" visible="true" width="158.095703125" x="-7.0478515625" xml:space="preserve" y="-5.32568359375">Event/Metadata dataflow<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.1513671875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#006699" verticalTextPosition="bottom" visible="true" width="174.4267578125" x="-15.21337890625" xml:space="preserve" y="-5.32568359375">Event/T. Metadata dataflow<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
