@@ -36,7 +36,7 @@ Figure 1 demonstrates a generic architecture of the DASH player including the Ev
 
 <figure>
 	<img src="Images/eventclientarch.png" />
-    <figcaption>The DASH player architecture including the inband Event and Application-related timed metadata handling</figcaption>
+    <figcaption>Figure 1: The DASH player architecture including the inband Event and Application-related timed metadata handling</figcaption>
 </figure>
 
 In the above figure:
@@ -66,7 +66,7 @@ In the above figure:
 Figure 2 presents the timing of an inband Event along the media timeline:
 <figure>
 	<img src="Images/inbandeventtiming.png" />
-    <figcaption>The inband event timing parameter on the media timeline</figcaption>
+    <figcaption>Figure 2: The inband event timing parameter on the media timeline</figcaption>
 </figure>
 
 As shown in Figure 2, every inband Event can be described with three timing parameters on the media timeline:
@@ -85,7 +85,7 @@ The third parameter is Event Duration (<var>DU</var> ), the duration for which t
 
 ## Event message box format and event timing parameters ## {#emsg-format}
 
-Figure 3 shows the emsg box format in DASH:
+Table 1 shows the emsg box format in DASH:
 
 <figure>
 <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 bgcolor="#DDDDDD"
@@ -199,7 +199,7 @@ Figure 3 shows the emsg box format in DASH:
   </td>
  </tr>
 </table>
-<figcaption>The emsg box format and parameters</figcaption>
+<figcaption>Table 1: The emsg box format and parameters</figcaption>
 </figure>
 
 
@@ -216,7 +216,7 @@ PeriodStart -  \frac{<{SegmentBase/presentationTimeOffset}>}{<{SegmentBase/times
 \end{cases}
 $$
 
-<figcaption>Event Start Time of an inband event</figcaption>
+<figcaption>Equation 1: Event Start Time of an inband event</figcaption>
 </figure>
 
 
@@ -238,7 +238,7 @@ In this document, we use the following common variable names instead of some of 
 
 ## MPD Events timing model ## {#mpd-event-timing}
 
-MPD Events carry the similar data model as inband Events. However, the former type is are carried in the MPD, under the Period elements. Each Period event has <{EventStream}> element(s), defining the <{EventStream/schemeIdUri}>, <{EventStream/value}> , <{EventStream/timescale}> and a sequences of <{Event}> elements. Each event may have <{Event/presentationTime}>, <{Event/duration}>, <{Event/id}> and <{Event/messageData}> attributes, as shown in Figure 4.
+MPD Events carry the similar data model as inband Events. However, the former type is are carried in the MPD, under the Period elements. Each Period event has <{EventStream}> element(s), defining the <{EventStream/schemeIdUri}>, <{EventStream/value}> , <{EventStream/timescale}> and a sequences of <{Event}> elements. Each event may have <{Event/presentationTime}>, <{Event/duration}>, <{Event/id}> and <{Event/messageData}> attributes, as shown in Table 2.
 
 
 <figure>
@@ -784,11 +784,11 @@ MPD Events carry the similar data model as inband Events. However, the former ty
   </td>
  </tr>
 </table>
-  <figcaption>MPD Event elements</figcaption>
+  <figcaption>Table 2: MPD Event elements</figcaption>
 </figure>
 
 
-As is shown in Figure 5, each MPD Event has three associated timing
+As is shown in Figure 3, each MPD Event has three associated timing
 parameters along the media timeline:
 
 1.  The PeriodStart Time (<var>RT</var>) of the Period element containing the EventStream element.
@@ -807,7 +807,7 @@ has <{EventStream/timescale}> to scale the above parameters.
 Figure 3 demonstrates these parameters in the media timeline.
 <figure>
   <img src="Images/mpdeventtiming.png" />
-  <figcaption>MPD events timing model
+  <figcaption>Figure 3: MPD events timing model
 </figcaption></figure>
 
 
@@ -817,7 +817,7 @@ calculated using values in its <{EventStream}> and <{Event}> elements:
 <figure>
 
   $$PT = \frac{<{Event/presentationTime}>}{<{EventStream/timescale}>}$$
-  <figcaption>Equation 2: Event Start Time of a MPD event
+  <figcaption>Equation 2: Event Start Time of MPD event
 </figcaption></figure>
 
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
@@ -831,10 +831,10 @@ In this document, we use the following common variable names instead of some of 
 
 ## Simple timed metadata timing model ## {#timed-metadata-timing}
 
-Figure 6 shows the timing model for timed metadata.
+Figure 4 shows the timing model for timed metadata.
 <figure>
   <img src="Images/timedmetadataeventtiming.png" />
-  <figcaption>The timed metadata timing parameters on the media timeline
+  <figcaption>Figure 4: The timed metadata timing parameters on the media timeline
 </figcaption></figure>
 
 As shown in this figure, the metadata sample timing including metadata
@@ -855,16 +855,16 @@ In this document, we use the following common variable names instead of some of 
 
 # Event and Timed Metadata dispatch timing modes # {#event-metadata-dispatch}
 
-Figure 7 shows two possible dispatch timing models for inband events.
+Figure 5 shows two possible dispatch timing models for inband events.
 
 <figure>
   <img src="Images/dispatchmodes.png" />
-  <figcaption>The Application events and timed metadata dispatch modes
+  <figcaption>Figure 5: The Application events and timed metadata dispatch modes
 </figcaption></figure>
 
 In this figure, two modes are shown:
 
-1. <dfn>On-receive</dfn> Dispatch Mode: Dispatching at <var>RT</var> or earlier. Since the segment carrying an emsg/metadata sample has to be parsed before (or assuming zero decode/rendering delay as the latest at) <var>RT</var> on the media timeline, the event/metadata sample shall be dispatched at this time or before to Application in this mode. Application has a duration of <var>PT</var>-<var>RT</var> for preparing for the event. In this mode, The client doesn’t need to maintain states of Application events or metadata samples either. Application may have to maintain the state for any event/metadata sample, its <var>PT</var> and  <var>DU</var>, and monitor its activation duration, if it needs to. Application also needs to schedule each event/sample at its <var>PT</var>, so it must be time-aware to properly make use of these timing parameters.
+1. <dfn>On-receive</dfn> Dispatch Mode: Dispatching at <var>RT</var> or earlier. Since the segment carrying an emsg/metadata sample has to be parsed before (or assuming zero decode/rendering delay as the latest at) <var>RT</var> on the media timeline, the event/metadata sample shall be dispatched at this time or before to Application in this mode. Application has a duration of <var>PT</var>-<var>RT</var> for preparing for the event. In this mode, the client doesn’t need to maintain states of Application events or metadata samples either. Application may have to maintain the state for any event/metadata sample, its <var>PT</var> and  <var>DU</var>, and monitor its activation duration, if it needs to. Application also needs to schedule each event/sample at its <var>PT</var>, so it must be time-aware to properly make use of these timing parameters.
 
 2. <dfn>On-start</dfn> Dispatch Mode: Dispatching exactly at <var>PT</var>, which is the start/presentation time of the event/metadata sample. The DASH player shall calculate the <var>PT</var> for each parsed event/metadata sample and dispatch the <var>message_data</var> at this exact moment. In this mode, since Application receives the event/sample at its start/presentation time, it needs to act on the received data right away, i.e. no advanced notice is given to Application in this mode. Application however may not need to maintain a state for the events and timed metadata samples, if the durations and/or the sequence and order of events/samples are not important to Application. Depending on the nature, meaning and relationship between different event instances/metadata samples, Application may need to maintain the state for them.
 
@@ -931,10 +931,10 @@ The description of the API below is strictly functional, i.e. implementation-agn
 player, and in IDL such as the OMG IDL or WebIDL. For example, the subscribeEvent() method as defined below may be mapped to the existing **on(type,listener,scope)** method as defined for the dash.js under **MediaPlayerEvents**.
 
 The state diagram of the DASH player associated with the API is
-shown below in Figure 8:
+shown below in Figure 6:
 <figure>
   <img src="Images/eventsubscriptionstatediagram.png" />
-  <figcaption>State Diagram of the DASH player for the event/timed metadata API.
+  <figcaption>Figure 6: State Diagram of the DASH player for the event/timed metadata API.
 </figcaption></figure>
 
 The scope of the above state diagram is the entire set of
@@ -967,7 +967,7 @@ Upon successful execution of the event/timed metadata subscription call
 (for which the DASH player will return a corresponding
 acknowledgment), the DASH player shall monitor the source of
 potential Event stream information, i.e., the MPD or incoming DASH
-Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>value</var>). The parentheses around value is because this parameter may be absent in the event/timed metadata subscription call. When a matching event/metadata sample is detected, the DASH player invokes the function specified in the callbackFunction argument with the following parameters. It should additionally provide to the Application the current presentation time at the DASH player when performing the dispatch action. The parameters to be passed in this method are shown in table below:
+Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>value</var>). The parentheses around value is because this parameter may be absent in the event/timed metadata subscription call. When a matching event/metadata sample is detected, the DASH player invokes the function specified in the callbackFunction argument with the following parameters. It should additionally provide to the Application the current presentation time at the DASH player when performing the dispatch action. The parameters to be passed in this method are shown in Table 3 below:
 
 <figure>
 <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
@@ -1050,7 +1050,7 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
 </table>
 </tr>
 </table>
-<figcaption>Event/timed metadata API parameters and datatypes</figcaption>
+<figcaption>Table 3: Event/timed metadata API parameters and datatypes</figcaption>
 </figure>
 
 
