@@ -479,6 +479,38 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     <td width="24%" valign=top style='width:24.68%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="EventStream">@<dfn>presentationTimeOffset</dfn></dl></span></p>
+    </td>
+    <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:9.0pt'>OD</span></p> <p class=MsoNormal align=left style='text-align:left'><span
+    style='font-size:9.0pt'>Default: 0</span></p>
+    </td>
+    <td width="56%" valign=top style='width:56.32%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt'>specifies the presentation time offset of this Event Stream that aligns with the start of the Period. Any Event contained in this Event Stream is mapped to the Period timeline by using the Event presentation time corrected by the value of the presentation time offset.</span></p>
+    <p class=MsoNormal align=left style='text-align:left'><span
+    style='font-size:9.0pt'>The value of the presentation time offset in seconds is the division of the value of this attribute and the value of the @timescale attribute.</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.64%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.68%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><b><span
     style='font-size:9.0pt;font-family:"Courier New"'><{Event}></span></b></p>
     </td>
@@ -689,7 +721,9 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'>@id</span></p>
+    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'></span><span
+    style='font-size:8.0pt;font-family:"Courier New"'>@<dl dfn-type="element-attr" dfn-for="Event"><dfn>id</dfn></dl></span><span
+    style='font-size:8.0pt'></span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -707,9 +741,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     font-family:"Courier New"'>Event</span></b><span style='font-size:9.0pt'>
     element shall have the same value for this attribute. </span></p>
     <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
-    page-break-after:avoid'><span style='font-size:8.0pt'>The scope of the </span><span
-    style='font-size:8.0pt;font-family:"Courier New"'>@<dl dfn-type="element-attr" dfn-for="Event"><dfn>id</dfn></dl></span><span
-    style='font-size:8.0pt'> for each Event is with the same </span><span
+    page-break-after:avoid'><span style='font-size:8.0pt'>The scope of the @id  for each Event is with the same </span><span
     style='font-size:8.0pt;font-family:"Courier New"'>@schemeIdURI</span><span
     style='font-size:8.0pt'> and </span><span style='font-size:8.0pt;
     font-family:"Courier New"'>@value</span><span style='font-size:8.0pt'>
@@ -717,6 +749,49 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     </td>
    </tr>
    <tr>
+    <td width="2%" valign=top style='width:2.54%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.54%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.62%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'>@contentEncoding</span></p>
+    </td>
+    <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;text-align:center;
+    page-break-after:avoid'><span style='font-size:9.0pt'>O</span></p>
+    </td>
+    <td width="51%" valign=top style='width:51.4%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:9.0pt'>specifies if the information in the body and the information in the @messageData is encoded.</span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:8.0pt'>If present, the following values are possible:</span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:8.0pt'>
+"base64" the content is encoded as described in IETF RFC 4648 prior to adding it to the field. </span></p>
+    <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
+    page-break-after:avoid'><span style='font-size:8.0pt'>
+If this attribute is present, the DASH client is expected to decode the message data and only provide the decoded message to the application.</span></p>
+    </td>
+   </tr><tr>
     <td width="2%" valign=top style='width:2.54%;border-top:none;border-left:
     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
     padding:0in 5.4pt 0in 5.4pt'>
@@ -817,7 +892,9 @@ calculated using values in its <{EventStream}> and <{Event}> elements:
 
 <figure>
 
-  $$ST = PeriodStart + \frac{<{Event/presentationTime}>}{<{EventStream/timescale}>}$$
+  $$ST = PeriodStart +  
+  \frac{<{EventStream/presentationTimeOffset}>}{<{EventStream/timescale}>} + 
+  \frac{<{Event/presentationTime}>}{<{EventStream/timescale}>}$$
   <figcaption>Equation 2: Event Start Time of MPD event
 </figcaption></figure>
 
