@@ -769,7 +769,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'>@contentEncoding</span></p>
+    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="Event">@<dfn>contentEncoding</dfn></dl></span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -918,6 +918,7 @@ $$
   <figcaption>Equation 3: decode64 function 
 </figcaption></figure>
 
+Note that the DASH client shall Base64 decode the <{Event/messageData}> value if the received <{Event/contentEncoding}> value is base64.
 
 ## Timed metadata sample timing model ## {#timed-metadata-timing}
 
