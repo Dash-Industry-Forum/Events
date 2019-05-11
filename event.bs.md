@@ -905,7 +905,19 @@ In this document, we use the following common variable names instead of some of 
 - <var>timescale</var> = <{EventStream/timescale}>
 - <var>duration</var> = <{Event/duration}>
 - <var>id</var> = <{Event/id}>
-- <var>message_data</var> = <{Event/messageData}>
+- <var>message_data</var> = decode64(<{Event/messageData}>)
+
+In which decode64() function is:
+<figure>
+
+  $$decode64(x) = \begin{cases}
+x\space\qquad\qquad\qquad\qquad\qquad \space \space \space \space   @contentEncoding\space Not \space Present\\ 
+base64 \space decoding \space of \space (x) \qquad @contentEncoding \space  = \space base64
+\end{cases}
+$$
+  <figcaption>Equation 3: decode64 function 
+</figcaption></figure>
+
 
 ## Timed metadata sample timing model ## {#timed-metadata-timing}
 
