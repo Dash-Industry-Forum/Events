@@ -2,7 +2,7 @@
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en'>
   <head>
     <meta charset='utf-8'/>
-    <title>DASH Event API</title>
+    <title>DASH Event Metadata API</title>
     <script class='remove'>
       var respecConfig = {
           specStatus: "ED"
@@ -71,10 +71,12 @@ interface DASHEvent : EventTarget {
           <pre class="idl">
 interface EventData {
     readonly        attribute DOMString                 schemeIdURI;
-    readonly        attribute ByteString                messageData;
-    readonly        attribute DOMTimeStamp?             presentationTime;    
+    readonly        attribute DOMString                 value;
+    readonly        attribute int?                      timescale;  
+    readonly        attribute DOMTimeStamp?             presentationTime;   
     readonly        attribute int?                      duration;   
-    readonly        attribute int?                      id;  
+    readonly        attribute int?                      id; 
+    readonly        attribute ByteString                messageData; 
 };
 </pre>
             <h3>Attributes</h3>              
@@ -84,27 +86,37 @@ interface EventData {
                 <p>The <code>schemeIDURI</code></dfn> attribute
                 MUST return a URI that identifies the DASH event scheme.</p>
               </dd>
-              <dt><code>messageData</code> of type <span class=
+              <dt><code>value</code> of type <span class=
               "idlAttrType"><a>DOMString</a></span>, readonly</dt>
               <dd>
-                <p>The <code>messageData</code></dfn> attribute
-                MUST return the event message data payload.</p>
-              </dd>
+                <p>The <code>value</code></dfn> attribute
+                MUST return the value for the event stream element. The value semantics are 
+                defined by the owners of the scheme identified in the <code>schemeIdUri</code> attribute.</p>
+              </dd>              
+              <dt><code>timescale</code> of type <span class=
+              "idlAttrType"><a>int</a></span>, readonly</dt>
+              <dd>
+                <p>The <code>timescale</code></dfn> attribute
+                MUST return the timescale in units per second to be used for the derivation of different real-time 
+                duration values in the <code>EventData</code> elements.
+                If not present, it shall be set to 1.</p>
+              </dd>                 
               <dt><code>presentationTime</code> of type <span class=
               "idlAttrType"><a>DOMTimeStamp</a></span>, readonly</dt>
               <dd>
                 <p>The <code>presentationTime</code></dfn> attribute
-                MUST return the "wall clock" time at which the payload contained
-                in <code>messageData</code> is to be acted upon.  If this attribute is not
-                present then its value must be set to NULL and the <code>messageData</code> payload must be acted upon
-                immediately.</p>
+                MUST return a value corresponding to the exact moment in the media presentation timeline that the event becomes active.
+                If this attribute is not present 
+                then its value shall be set to NULL and the event is assumed to be active immediately.</p>
               </dd>
               <dt><code>duration</code> of type <span class=
               "idlAttrType"><a>int</a></span>, readonly</dt>
               <dd>
                 <p>The <code>duration</code></dfn> attribute
-                MUST return the  time in milliseconds for which
+                MUST return the time for which
                 the event is in effect starting from presentationTime.
+                The value of the duration in seconds is the division of the value of this attribute and 
+                the value of the <code>timescale</code> attribute.
                 If this attribute is not present then its value must be
                 set to NULL and the event
                 MUST be persisted until another DASH event is received.</p>
@@ -114,10 +126,16 @@ interface EventData {
               <dd>
                 <p>The <code>id</code></dfn> attribute
                 MUST return an identifying value for
-                this event.  If this vallue is not present then its value must
+                this event.  If this value is not present then its value must
                 be set to NULL.</p>
               </dd>           
-
+              <dt><code>messageData</code> of type <span class=
+              "idlAttrType"><a>DOMString</a></span>, readonly</dt>
+              <dd>
+                <p>The <code>messageData</code></dfn> attribute
+                MUST return the event message data payload.</p>
+              </dd>
+              
 <h2>EventList Interface</h2> 
           <pre class="idl">
 dictionary EventList {
