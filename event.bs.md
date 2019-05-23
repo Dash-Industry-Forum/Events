@@ -1008,39 +1008,26 @@ maintained in the event/metadata buffer.
 
 # Prose description of APIs # {#prose-event-API}
 
-The event/timed metadata API is an interface defined between a
-“DASH player” as defined in DASH-IF, or a “DASH client” as defined in
-3GPP TS 26.247 or ISO/IEC 23009-1 and a device application in the
-exchange of subscription data and dispatch/transfer of matching DASH
-Event or timed metadata information between these entities. The
-Event/timed metadata API is shown at Figure 1.
+The event/timed metadata API is an interface defined between a “DASH player” as defined in DASH-IF, or a “DASH client” as defined in 3GPP TS 26.247 or ISO/IEC 23009-1 and a device application in the exchange of subscription data and dispatch/transfer of matching DASH Event or timed metadata information between these entities. The Event/timed metadata API is shown at Figure 1.
 
 Note: In this document, the term "DASH player" is used.
 
-The description of the API below is strictly functional, i.e. implementation-agnostic, is intended to be employed for the specification of the API in Javascript for the dash.js open source DASH
-player, and in IDL such as the OMG IDL or WebIDL. For example, the subscribeEvent() method as defined below may be mapped to the existing **on(type,listener,scope)** method as defined for the dash.js under **MediaPlayerEvents**.
+The description of the API below is strictly functional, i.e. implementation-agnostic, is intended to be employed for the specification of the API in Javascript for the dash.js open source DASH player, and in IDL such as the OMG IDL or WebIDL. For example, the subscribeEvent() method as defined below may be mapped to the existing **on(type,listener,scope)** method as defined for the dash.js under **MediaPlayerEvents**.
 
-The state diagram of the DASH player associated with the API is
-shown below in Figure 6:
+The state diagram of the DASH player associated with the API is shown below in Figure 6:
 <figure>
   <img src="Images/eventsubscriptionstatediagram.png" />
   <figcaption>Figure 6: State Diagram of the DASH player for the event/timed metadata API.
 </figcaption></figure>
 
 The scope of the above state diagram is the entire set of
-applicable events/timed metadata streams being subscribed/unsubscribed,
-i.e. it is not indicating the state model of the DASH player in
-the context of a single Event/timed metadata stream subscription/un-subscription.
+applicable events/timed metadata streams being subscribed/unsubscribed, i.e. it is not indicating the state model of the DASH player in the context of a single Event/timed metadata stream subscription/un-subscription.
 
 The application subscribes to the reception of the desired event/timed metadata and associated information by the **subscribeEvent()** method. The parameters to be passed in this method are:
 
   - <var>app_id</var> – (Optional) A unique ID for the Application subscribing to data dispatch from the DASH player. Depending on the platform/implementation this identifier may be used by the DASH player to maintain state information.
 
-  - <var>scheme_uri</var> – A unique identifier scheme for the associated DASH
-    Event/metadata stream of interest to the Application. This string
-    may use a URN or a URL syntax, and may correspond to either an MPD
-    Event, an inband Event, or a timed metadata stream identifier. The
-    <var>scheme_uri</var> may be formatted as a regular expression (regex).
+  - <var>scheme_uri</var> – A unique identifier scheme for the associated DASH Event/metadata stream of interest to the Application. This string may use a URN or a URL syntax, and may correspond to either an MPD Event, an inband Event, or a timed metadata stream identifier. The <var>scheme_uri</var> may be formatted as a regular expression (regex). If a value of NULL is passed for <var>scheme_uri</var>, then the application subscribes to all existing event and metadata schemes described in the MPD. In this case, the value of <var>value</var> is irrelevant.
 
   - <var>value</var> – A value of the event or timed metadata stream within the scope of the above <var>scheme_uri</var>, optional to include. When not present, no default value is defined – i.e., no filtering criterion is associated with the Event scheme identification.
 
@@ -1082,16 +1069,16 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
 <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=scheme_id_uri=]</td>
 <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata track URI=]</span></td>
 <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>&nbsp;</span></td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">N</td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
 </tr>
 <tr class="odd" style="height: 21px;">
 <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/value}&gt;</td>
 <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=value=]</td>
 <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"></td>
 <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"></td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">N</td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
 </tr>
 <tr class="even" style="height: 21px;">
 <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/timescale}&gt;</td>
