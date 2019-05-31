@@ -15,6 +15,7 @@ Default Highlight: text
 <!-- Enabling line numbers breaks code blocks in PDF! (2018-10-02) -->
 Line Numbers: off
 Markup Shorthands: markdown yes
+Markup Shorthands: css yes
 Boilerplate: copyright off, abstract off
 Abstract: None
 </pre>
@@ -30,13 +31,14 @@ Abstract: None
 <dfn>time scale</dfn>
 <dfn>cmaf</dfn> 
 
+
 # DASH player architecture for processing DASH events and timed metadata tracks # {#event-architecture}
 
-Figure 1 demonstrates a generic architecture of the DASH player including DASH Events and timed metadata tracks processing models.
+<a href="#player-event-architecture">This Figure</a> demonstrates a generic architecture of the DASH player including DASH Events and timed metadata tracks processing models.
 
-<figure>
+<figure class="figure" id="player-event-architecture">
 	<img src="Images/eventclientarch.png" />
-    <figcaption>Figure 1: DASH player architecture including the inband Event and Application-related timed metadata handling</figcaption>
+    <figcaption class="figure">DASH player architecture including the inband Event and Application-related timed metadata handling</figcaption>
 </figure>
 
 In the above figure:
@@ -55,17 +57,17 @@ In the above figure:
 4.  The DASH player-specific Events are passed to the DASH player control function (named 'DASH Client Control, Selection & Heuristic Logic' in Figure 1), while the Application-related Events and timed metadata track samples are passed to the Event & Metadata Synchronizer and Dispatcher function.
 
 5. If an Application is subscribed to a specific Event or timed metadata stream, dispatch the corresponding event instances or timed metadata samples, according to the dispatch mode:
-    1. For [=On-receive=] dispatch mode, dispatch the Event information or timed metadata samples as soon as they are received(or no later than <var>AT</var>).
-    2. For [=On-start=] dispatch mode, dispatch the Event information or timed metadata samples at their associated presentation time, using the synchronization signal from the media decoder.
+    1. For [=on-receive=] dispatch mode, dispatch the Event information or timed metadata samples as soon as they are received(or no later than <var>AT</var>).
+    2. For [=on-start=] dispatch mode, dispatch the Event information or timed metadata samples at their associated presentation time, using the synchronization signal from the media decoder.
 
 # Event and Timed metadata sample timing models # {#event-metadata-timing}
 
 ## Inband Event timing parameters ## {#Inband-event-timing}
 
 Figure 2 presents the timing of an inband Event along the media timeline:
-<figure>
+<figure class="figure">
 	<img src="Images/inbandeventtiming.png" />
-    <figcaption>Figure 2: The inband event timing parameter on the media timeline</figcaption>
+    <figcaption class="figure">The inband event timing parameter on the media timeline</figcaption>
 </figure>
 
 As shown in Figure 2, every inband Event can be described with three timing parameters on the media timeline:
@@ -86,7 +88,7 @@ The third parameter is Event Duration (<var>DU</var> ), the duration for which t
 
 Table 1 shows the emsg box format in DASH:
 
-<figure>
+<figure class="table">
 <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 bgcolor="#DDDDDD"
  style='border-collapse:collapse;border:none'>
  <tr>
@@ -198,7 +200,7 @@ Table 1 shows the emsg box format in DASH:
   </td>
  </tr>
 </table>
-<figcaption>Table 1: The emsg box format and parameters</figcaption>
+<figcaption class="table">The emsg box format and parameters</figcaption>
 </figure>
 
 
@@ -206,16 +208,16 @@ Table 1 shows the emsg box format in DASH:
 The <var>ST</var> of an event can be calculated using values in its emsg box:
 
 
-<figure>
+<figure class="equation">
 
 $$ST = \begin{cases}
 AT + \frac{presentation\_time\_delta}{timescale} \space
 \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad  version=0\\ 
-PeriodStart +  \frac{<{SegmentBase/presentationTimeOffset}>}{<{SegmentBase/timescale}>} + \frac{presentation\_time}{timescale}\qquad \qquad version=1
+PeriodStart +  \frac{SegmentBase@presentationTimeOffset}{SegmentBase@timescale} + \frac{presentation\_time}{timescale}\qquad \qquad version=1
 \end{cases}
 $$
 
-<figcaption>Equation 1: Event Start Time of an inband event</figcaption>
+<figcaption class="equation">Event Start Time of an inband event</figcaption>
 </figure>
 
 
@@ -234,7 +236,9 @@ Note: In the case of [=CMAF=], <var>PeriodStart</var> is the CMAF track's earlie
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
 
 - <var>scheme_id</var> = [=scheme_id_uri=]
-- <var>duration</var> = [=event_duration=]
+- <var>value</var> = [=value=]
+- <var>presentation_time</var> = <var>ST</var>
+- <var>duration</var> = [=event_duration=]/[=timescale=]
 - <var>message_data</var> = [=message_data()=]
 
 ## MPD Events timing model ## {#mpd-event-timing}
@@ -242,7 +246,7 @@ In this document, we use the following common variable names instead of some of 
 MPD Events carry the similar data model as inband Events. However, the former type is are carried in the MPD, under the Period elements. Each Period event has <{EventStream}> element(s), defining the <{EventStream/schemeIdUri}>, <{EventStream/value}> , <{EventStream/timescale}> and a sequences of <{Event}> elements. Each event may have <{Event/presentationTime}>, <{Event/duration}>, <{Event/id}> and <{Event/messageData}> attributes, as shown in Table 2.
 
 
-<figure>
+<figure class="table">
 <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
  style='border-collapse:collapse;border:none'>
  <tr>
@@ -498,6 +502,38 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     style='font-size:9.0pt'>The value of the presentation time offset in seconds is the division of the value of this attribute and the value of the @timescale attribute.</span></p>
     </td>
    </tr>
+  <tr>
+    <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
+    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="2%" valign=top style='width:2.64%;border:none;border-bottom:
+    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
+    </td>
+    <td width="24%" valign=top style='width:24.68%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="EventStream">@<dfn>dispatchMode</dfn></dl></span></p>
+    </td>
+    <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:9.0pt'>OD</span></p> <p class=MsoNormal align=left style='text-align:left'><span
+    style='font-size:9.0pt'>Default: 'on-receive'</span></p>
+    </td>
+    <td width="56%" valign=top style='width:56.32%;border-top:none;border-left:
+    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt'>specifies the dispatch mode for this Event Stream. This attribute may have two values: 'on-receive' for dispatching the events at the time of receive of event, and 'on-start' for dispatching theevents at time of their presentation time</span></p>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt'>Note: This attribute is not currently included in ISO/IEC 23009-1.</span></p>
+    </td>
+   </tr>
    <tr>
     <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
@@ -721,9 +757,8 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'></span><span
-    style='font-size:8.0pt;font-family:"Courier New"'>@<dl dfn-type="element-attr" dfn-for="Event"><dfn>id</dfn></dl></span><span
-    style='font-size:8.0pt'></span></p>
+    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
+    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="Event">@<dfn>id</dfn></dl></span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -860,9 +895,10 @@ If this attribute is present, the DASH client is expected to decode the message 
   </td>
  </tr>
 </table>
-  <figcaption>Table 2: MPD Event elements</figcaption>
+  <figcaption class="table">MPD Event elements</figcaption>
 </figure>
 
+Note: The attribute @dispatchMode is not defined by ISO/IEC 23009-1. DASH-IF plans to propose addition of such attribute to the specification as soon as possible.
 
 As is shown in Figure 3, each MPD Event has three associated timing
 parameters along the media timeline:
@@ -881,41 +917,41 @@ explicitly included in the <{Event}> element. Each <{EventStream}> also
 has <{EventStream/timescale}> to scale the above parameters.
 
 Figure 3 demonstrates these parameters in the media timeline.
-<figure>
+<figure class="figure">
   <img src="Images/mpdeventtiming.png" />
-  <figcaption>Figure 3: MPD events timing model
+  <figcaption class="figure">MPD events timing model
 </figcaption></figure>
 
 
 The <var>ST</var> of an MPD event can be
 calculated using values in its <{EventStream}> and <{Event}> elements:
 
-<figure>
+<figure class="equation">
 
   $$ST = PeriodStart +  
-  \frac{<{EventStream/presentationTimeOffset}>}{<{EventStream/timescale}>} + 
-  \frac{<{Event/presentationTime}>}{<{EventStream/timescale}>}$$
-  <figcaption>Equation 2: Event Start Time of MPD event
+  \frac{EventStream@presentationTimeOffset}{EventStream@timescale} + 
+  \frac{Event@presentationTime}{EventStream@timescale}$$
+  <figcaption class="equation">Event Start Time of MPD event
 </figcaption></figure>
 
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
 
 - <var>scheme_id</var> = <{EventStream/schemeIdUri}>
 - <var>value</var> = <{EventStream/value}>
-- <var>timescale</var> = <{EventStream/timescale}>
-- <var>duration</var> = <{Event/duration}>
+- <var>presentation_time</var> = <var>ST</var>
+- <var>duration</var> = <{Event/duration}>/<{EventStream/timescale}>
 - <var>id</var> = <{Event/id}>
 - <var>message_data</var> = decode64(<{Event/messageData}>)
 
 In which decode64() function is:
-<figure>
+<figure class="equation">
 
   $$decode64(x) = \begin{cases}
 x\space\qquad\qquad\qquad\qquad\qquad \space \space \space \space   @contentEncoding\space Not \space Present\\ 
 base64 \space decoding \space of \space (x) \qquad @contentEncoding \space  = \space base64
 \end{cases}
 $$
-  <figcaption>Equation 3: decode64 function 
+  <figcaption class="equation"> decode64 function 
 </figcaption></figure>
 
 Note that the DASH client shall Base64 decode the <{Event/messageData}> value if the received <{Event/contentEncoding}> value is base64.
@@ -923,9 +959,9 @@ Note that the DASH client shall Base64 decode the <{Event/messageData}> value if
 ## Timed metadata sample timing model ## {#timed-metadata-timing}
 
 Figure 4 shows the timing model for a given timed metadata sample.
-<figure>
+<figure class="figure">
   <img src="Images/timedmetadataeventtiming.png" />
-  <figcaption>Figure 4: Timing parameters of a timed metadata sample on the media timeline
+  <figcaption class="figure">Timing parameters of a timed metadata sample on the media timeline
 </figcaption></figure>
 
 As shown in this figure, the metadata sample timing including metadata
@@ -938,25 +974,32 @@ constraints is maintained for CMAF Chunks.
 
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
 
+
 - <var>scheme_id</var> = <dfn>timed metadata track URI</dfn>
-- <var>timescale</var> = <dfn>timed metadata track timescale</dfn> in mdhd box.
-- <var>ST</var> = <dfn>timed metadata sample presentation time</dfn>
-- <var>duration</var> = <dfn>timed metadata sample duration</dfn>
+- <var>timescale</var> = timed metadata track timescale in mdhd box. 
+- <var>presentation_time</var> = <dfn>timed metadata sample presentation time</dfn>/<var>timescale</var>
+- <var>duration</var> = <dfn>timed metadata sample duration</dfn>/<var>timescale</var>
 - <var>message_data</var> = <dfn>timed metadata sample data in mdat</dfn>
+
+Note: The timed metadata track currently doesn't include any signaling for its dispatch mode. DASH-IF will request MPEG to add a signaling for this parameter and will update this spec accordingly.
 
 # Events and timed metadata sample dispatch timing modes # {#event-metadata-dispatch}
 
 Figure 5 shows two possible dispatch timing models for DASH events and timed metadata samples.
-<figure>
+<figure class="figure">
   <img src="Images/eventtimedmetadatadispatchmodes.png" />
-  <figcaption>Figure 5: The Application events and timed metadata dispatch modes
+  <figcaption class="figure">The Application events and timed metadata dispatch modes
 </figcaption></figure>
 
 In this figure, two modes are shown:
 
-1. <dfn>On-receive</dfn> Dispatch Mode: Dispatching at <var>AT</var> or earlier. Since the segment carrying an emsg/metadata sample has to be parsed before (or assuming zero decode/rendering delay as the latest at) <var>AT</var> on the media timeline, the event/metadata sample shall be dispatched at this time or before to Application in this mode. Application has a duration of <var>ST</var>-<var>AT</var> for preparing for the event. In this mode, the client doesn’t need to maintain states of Application events or metadata samples either. Application may have to maintain the state for any event/metadata sample, its <var>ST</var> and  <var>DU</var>, and monitor its activation duration, if it needs to. Application also needs to schedule each event/sample at its <var>ST</var>, so it must be time-aware to properly make use of these timing parameters.
+1. <dfn>on-receive</dfn> Dispatch Mode: Dispatching at <var>AT</var> or earlier. Since the segment carrying an emsg/metadata sample has to be parsed before (or assuming zero decode/rendering delay as the latest at) <var>AT</var> on the media timeline, the event/metadata sample shall be dispatched at this time or before to Application in this mode. Application has a duration of <var>ST</var>-<var>AT</var> for preparing for the event. In this mode, the client doesn’t need to maintain states of Application events or metadata samples either. Application may have to maintain the state for any event/metadata sample, its <var>ST</var> and  <var>DU</var>, and monitor its activation duration, if it needs to. Application also needs to schedule each event/sample at its <var>ST</var>, so it must be time-aware to properly make use of these timing parameters.
 
-2. <dfn>On-start</dfn> Dispatch Mode: Dispatching exactly at <var>ST</var>, which is the start/presentation time of the event/metadata sample. The DASH player shall calculate the <var>ST</var> for each parsed event/metadata sample and dispatch the <var>message_data</var> at this exact moment. In this mode, since Application receives the event/sample at its start/presentation time, it needs to act on the received data right away, i.e. no advanced notice is given to Application in this mode. Application however may not need to maintain a state for the events and timed metadata samples, if the durations and/or the sequence and order of events/samples are not important to Application. Depending on the nature, meaning and relationship between different event instances/metadata samples, Application may need to maintain the state for them.
+2. <dfn>on-start</dfn> Dispatch Mode: Dispatching exactly at <var>ST</var>, which is the start/presentation time of the event/metadata sample. The DASH player shall calculate the <var>ST</var> for each parsed event/metadata sample and dispatch the <var>message_data</var> at this exact moment. In this mode, since Application receives the event/sample at its start/presentation time, it needs to act on the received data right away, i.e. no advanced notice is given to Application in this mode. Application however may not need to maintain a state for the events and timed metadata samples, if the durations and/or the sequence and order of events/samples are not important to Application. Depending on the nature, meaning and relationship between different event instances/metadata samples, Application may need to maintain the state for them.
+
+Note: ISO/IEC 23009-1 does not currently include a signaling for the desired dispatch mode in MPD or timed metadata track. DASH-IF beleives an explicit signaling of the dispatch mode is benifitial and will request MPEG to add the support for it. Otherwise, either DASH-IF addes extensions or signaling of the dispatch mode would be considered out-of-band.
+
+Note: According to ISO/IEC 23009-1, the parameter <var>duration</var> has a different meaning in each dispatch mode. In the case of on-start, <var>duration</var> defines the duration starting from <var>ST</var> in which the DASH player shall dispatch the event exactly once. In the nromal playback, the player dispatches the event at <var>ST</var>. However if the DASH player for instance seek to a moment after <var>ST </var> and during the above duration, then it must dispatch the event immidiately. In the case of on-receive, <var>duration</var> is a property of event instance and is defined by the <var>scheme_id</var> owner. 
 
 ## The Dispatch Processing Model ## {#dispatch-processing}
 
@@ -978,11 +1021,11 @@ The DASH player shall implement the following process:
 
 2. If Application is not subscribed to the <var>scheme_uri</var>/(<var>value</var>) pair, end the processing of this emsg.
 
-### [=On-receive=] processing   ### {#on-receive-proc}
+### [=on-receive=] processing   ### {#on-receive-proc}
 The DASH player shall implement the following process when <var>dispatch_mode</var> = <var>on_receive</var>:
 - Dispatch the event/timed metadata, including <var>ST</var>, <var>id</var>, <var>DU</var>, <var>timescale</var> and <var>message_data</var> as described in [[#prose-event-API]].
 
-### [=On-start=] processing  ### {#on-start-proc}
+### [=on-start=] processing  ### {#on-start-proc}
 The DASH player shall implement the following process when <var>dispatch_mode</var> = <var>on_start</var>:
 1. Derive the event instance/metadata sample's <var>ST</var> 
 
@@ -1014,10 +1057,13 @@ Note: In this document, the term "DASH player" is used.
 
 The description of the API below is strictly functional, i.e. implementation-agnostic, is intended to be employed for the specification of the API in Javascript for the dash.js open source DASH player, and in IDL such as the OMG IDL or WebIDL. For example, the subscribeEvent() method as defined below may be mapped to the existing **on(type,listener,scope)** method as defined for the dash.js under **MediaPlayerEvents**.
 
-The state diagram of the DASH player associated with the API is shown below in Figure 6:
-<figure>
+As part of this API and prior to any operations, the DASH player provides a list of <var>scheme_id</var>/(<var>value</var>) listed in MPD when it receives it. This list includes all events as well as <var>scheme_id</var> of all timed metadata tracks.  At this point the application is aware of the possible events and metadata delivered by the DASH player.
+
+
+The subscription state diagram of the DASH player associated with the API is shown below in Figure 6:
+<figure class="figure">
   <img src="Images/eventsubscriptionstatediagram.png" />
-  <figcaption>Figure 6: State Diagram of the DASH player for the event/timed metadata API.
+  <figcaption class="figure">State Diagram of the DASH player for the event/timed metadata API.
 </figcaption></figure>
 
 The scope of the above state diagram is the entire set of
@@ -1046,92 +1092,94 @@ acknowledgment), the DASH player shall monitor the source of
 potential Event stream information, i.e., the MPD or incoming DASH
 Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>value</var>). The parentheses around value is because this parameter may be absent in the event/timed metadata subscription call. When a matching event/metadata sample is detected, the DASH player invokes the function specified in the callbackFunction argument with the following parameters. It should additionally provide to the Application the current presentation time at the DASH player when performing the dispatch action. The parameters to be passed in this method are shown in Table 3 below:
 
-<figure>
-<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+<figure class="table">
+<table border=1 cellspacing=0 cellpadding=0
  style='border-collapse:collapse;border:none'>
- <tr>
-  <td valign=top style='width:800pt;border:solid #FFFFFF 1pt;
-  padding:0in 5.4pt 0in 5.4pt'>
-<table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" width="99%" style="width: 99.2%; border-collapse: collapse; border: none;">
-<thead>
-<tr class="header" style="height: 41px;">
-<th  style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle; width: 25%;">MPD event</th>
-<th style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle; width: 25%;">Inband emsg</th>
-<th style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle; width: 25%;">Metadata</th>
-<th style="width: 10%; border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle;">Data Type</th>
-<th  valign="top" style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: center; vertical-align: middle; width: 40px;">&lsquo;[=On-receive=]&rsquo;</th>
-<th  valign="top" style="padding: 0in 5.4pt; border: 1pt solid black; height: 41px; text-align: center; vertical-align: middle; width: 40px;">&lsquo;[=On-start=]&rsquo;</th>
-</tr>
-</thead>
-<tbody>
-<tr class="even" style="height: 21px;">
-<td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/schemeIdUri}&gt;</td>
-<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=scheme_id_uri=]</td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata track URI=]</span></td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>&nbsp;</span></td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
-</tr>
-<tr class="odd" style="height: 21px;">
-<td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/value}&gt;</td>
-<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=value=]</td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"></td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"></td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
-</tr>
-<tr class="even" style="height: 21px;">
-<td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/timescale}&gt;</td>
-<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=timescale=]</td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata track timescale=]</span></td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(32)</span></td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
-</tr>
-<tr class="odd" style="height: 21px;">
-<td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/presentationTime}&gt;</td>
-<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=presentation_time=]</td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample presentation time=]</span></td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(64)</span></td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
-</tr>
-<tr class="even" style="height: 21px;">
-<td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/duration}&gt;</td>
-<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=event_duration=]</td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample duration=]</span></td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(32)</span></td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
-</tr>
-<tr class="odd" style="height: 21px;">
-<td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/id}&gt;</td>
-<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=id=]</td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"></td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(32)</span></td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
-</tr>
-<tr class="even" style="height: 21px;">
-<td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/messageData}&gt;</td>
-<td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=message_data()=]</td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample data in mdat=]</span></td>
-<td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(8) x messageSize</span></td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
-<td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
-</tr>
-<tr class="even" style="height: 21px;">
-<td colspan="6" align="left" width="2%" valign="top" style="border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px; width: 55.0001%;">Y= Yes, N= NO, O= Optional</td>
-</tr>
-</tbody>
+    <tr>
+        <td valign=top style='width:800pt;border:solid #FFFFFF 1pt;padding:0in 5.4pt 0in 5.4pt'>
+            <table border="1" cellspacing="0" cellpadding="0" width="99%" style="width: 99.2%; border-collapse: collapse; border: none;">
+                <thead>
+                    <tr class="header" style="height: 41px;">
+                        <th  style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle; width: 25%;">API Parameter</th>
+                        <th  style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle; width: 25%;">MPD event</th>
+                        <th style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle; width: 25%;">Inband emsg</th>
+                        <th style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle; width: 25%;">Metadata</th>
+                        <th style="width: 10%; border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: left; vertical-align: middle;">Data Type</th>
+                        <th  valign="top" style="border-top: 1pt solid black; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 41px; text-align: center; vertical-align: middle; width: 40px;">&lsquo;[=on-receive=]&rsquo;</th>
+                        <th  valign="top" style="padding: 0in 5.4pt; border: 1pt solid black; height: 41px; text-align: center; vertical-align: middle; width: 40px;">&lsquo;[=on-start=]&rsquo;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="even" style="height: 21px;">
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">scheme_id</td>
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/schemeIdUri}&gt;</td>
+                        <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=scheme_id_uri=]</td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata track URI=]</span></td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>&nbsp;</span></td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
+                    </tr>
+                    <tr class="odd" style="height: 21px;">
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">value</td>
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/value}&gt;</td>
+                        <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=value=]</td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"></td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"></td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
+                    </tr>
+                    <tr class="odd" style="height: 21px;">
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><var>presentation_time</var></td>
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/presentationTime}&gt;</td>
+                        <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=presentation_time=]</td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample presentation time=]</span></td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(64) <br> 
+                        in milliseconds</span></td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
+                    </tr>
+                    <tr class="even" style="height: 21px;">
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">duration</td>
+                        <td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/duration}&gt;</td>
+                        <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=event_duration=]</td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample duration=]</span></td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(32) <br> 
+                        in milliseconds</span></td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
+                    </tr>
+                    <tr class="odd" style="height: 21px;">
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">id</td>
+                        <td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/id}&gt;</td>
+                        <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=id=]</td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"></td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(32)</span></td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">N</td>
+                    </tr>
+                    <tr class="even" style="height: 21px;">
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">message_data</td>
+                        <td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/messageData}&gt;</td>
+                        <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=message_data()=]</td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample data in mdat=]</span></td>
+                        <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(8) x messageSize</span></td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px;">Y</td>
+                        <td align="center" width="2%" valign="top" style="width: 15%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px;">Y</td>
+                    </tr>
+                    <tr class="even" style="height: 21px;">
+                        <td colspan="6" align="left" width="2%" valign="top" style="border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0in 5.4pt; height: 21px; width: 55.0001%;">Y= Yes, N= NO, O= Optional</td>
+                    </tr>
+                </tbody>
+            </table>
+    </tr>
 </table>
-</tr>
-</table>
-<figcaption>Table 3: Event/timed metadata API parameters and datatypes</figcaption>
+<figcaption class="table">Event/timed metadata API parameters and datatypes</figcaption>
 </figure>
 
+When the duration of the event is unknown, the vairable <var>duration</var> shall be set to its maximum value (xFFFFFFFF =  4,294,967,295). 
 
 Note:  In the case of ‘emsg’ version 0, the DASH player is expected to calculate [=presentation_time=] from [=presentation_time_delta=].
+
 
 In order to remove a listener the **unsubscribeEvent()** function is
 called with the following arguments:
