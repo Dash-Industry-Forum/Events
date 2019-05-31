@@ -3,7 +3,7 @@
 <pre class="metadata">
 Revision: 1.0
 
-Title: DASH player's Application Events and Timed Metadata Processing Models and APIs
+Title: DASH Player's Application Events and Timed Metadata Processing Models and APIs
 Status: LD
 Shortname: application events
 URL: https://dashif.org/guidelines/name-of-doc
@@ -32,21 +32,21 @@ Abstract: None
 <dfn>cmaf</dfn> 
 
 
-# DASH player architecture for processing DASH events and timed metadata tracks # {#event-architecture}
+# DASH Player architecture for processing DASH events and timed metadata tracks # {#event-architecture}
 
-<a href="#player-event-architecture">This Figure</a> demonstrates a generic architecture of the DASH player including DASH Events and timed metadata tracks processing models.
+<a href="#player-event-architecture">This Figure</a> demonstrates a generic architecture of DASH Player including DASH Events and timed metadata tracks processing models.
 
 <figure class="figure" id="player-event-architecture">
 	<img src="Images/eventclientarch.png" />
-    <figcaption class="figure">DASH player architecture including the inband Event and Application-related timed metadata handling</figcaption>
+    <figcaption class="figure">DASH Player architecture including the inband Event and Application-related timed metadata handling</figcaption>
 </figure>
 
 In the above figure:
 
-1. DASH player processes the MPD. If the manifest
+1. DASH Player processes the MPD. If the manifest
     includes any MPD Events, it parses them and appends them to the Event & Timed Metadata Buffer.
 
-2. Based on the MPD, DASH player manages fetching and parsing the Segments before appending them into the media decoder input buffer (named 'Media Buffer' in the Figure 1).
+2. Based on the MPD, DASH Player manages fetching and parsing the Segments before appending them into the media decoder input buffer (named 'Media Buffer' in the Figure 1).
 
 3. Parsing a Segment includes:
     
@@ -54,7 +54,7 @@ In the above figure:
     2. For an Application-related timed metadata track, extracting the data samples, and appending them to the Event & Metadata Buffer.
     3. For media segments, parse the segments and append them to Media Buffer.
 
-4.  The DASH player-specific Events are passed to the DASH player control function (named 'DASH Client Control, Selection & Heuristic Logic' in Figure 1), while the Application-related Events and timed metadata track samples are passed to the Event & Metadata Synchronizer and Dispatcher function.
+4.  The DASH Player-specific Events are passed to DASH Player control function (named 'DASH Client Control, Selection & Heuristic Logic' in Figure 1), while the Application-related Events and timed metadata track samples are passed to the Event & Metadata Synchronizer and Dispatcher function.
 
 5. If an Application is subscribed to a specific Event or timed metadata stream, dispatch the corresponding event instances or timed metadata samples, according to the dispatch mode:
     1. For [=on-receive=] dispatch mode, dispatch the Event information or timed metadata samples as soon as they are received(or no later than <var>AT</var>).
@@ -78,7 +78,7 @@ As shown in Figure 2, every inband Event can be described with three timing para
 
 3. Event duration (<var>DU</var>): the duration for which the Event is active
 
-An inband Event is inserted in the beginning of a Segment. Since each media segment has an earliest presentation time equal to (<var>AT</var>), <var>AT</var> of the Segment carrying the Event Message box can be considered as the location of that box on the media timeline. The DASH player has to fetch and parse the Segment before or at its <var>AT</var> (at <var>AT</var> when it's assumed that the decoding and rendering of the segment incurs practically zero delay). Therefore, the Event inserted in a Segment at its <var>AT</var> time will be ready to be processed and fetched no later than <var>AT</var> on the media timeline.
+An inband Event is inserted in the beginning of a Segment. Since each media segment has an earliest presentation time equal to (<var>AT</var>), <var>AT</var> of the Segment carrying the Event Message box can be considered as the location of that box on the media timeline. DASH Player has to fetch and parse the Segment before or at its <var>AT</var> (at <var>AT</var> when it's assumed that the decoding and rendering of the segment incurs practically zero delay). Therefore, the Event inserted in a Segment at its <var>AT</var> time will be ready to be processed and fetched no later than <var>AT</var> on the media timeline.
 
 The second timing parameter is Event Presentation/Start Time (<var>ST</var> ). <var>ST</var> is the moment in the media timeline that the Event becomes active. This value can be calculated using the parameters included in Event Message box.
 
@@ -502,38 +502,6 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     style='font-size:9.0pt'>The value of the presentation time offset in seconds is the division of the value of this attribute and the value of the @timescale attribute.</span></p>
     </td>
    </tr>
-  <tr>
-    <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
-    solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
-    padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
-    </td>
-    <td width="2%" valign=top style='width:2.64%;border:none;border-bottom:
-    solid black 1.0pt;padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal><span style='font-size:9.0pt'>&nbsp;</span></p>
-    </td>
-    <td width="24%" valign=top style='width:24.68%;border-top:none;border-left:
-    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-    padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="EventStream">@<dfn>dispatchMode</dfn></dl></span></p>
-    </td>
-    <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
-    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-    padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal align=center style='text-align:center'><span
-    style='font-size:9.0pt'>OD</span></p> <p class=MsoNormal align=left style='text-align:left'><span
-    style='font-size:9.0pt'>Default: 'on-receive'</span></p>
-    </td>
-    <td width="56%" valign=top style='width:56.32%;border-top:none;border-left:
-    none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
-    padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt'>specifies the dispatch mode for this Event Stream. This attribute may have two values: 'on-receive' for dispatching the events at the time of receive of event, and 'on-start' for dispatching theevents at time of their presentation time</span></p>
-    <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt'>Note: This attribute is not currently included in ISO/IEC 23009-1.</span></p>
-    </td>
-   </tr>
    <tr>
     <td width="2%" valign=top style='width:2.52%;border-top:none;border-left:
     solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:none;
@@ -824,7 +792,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
 "base64" the content is encoded as described in IETF RFC 4648 prior to adding it to the field. </span></p>
     <p class=MsoNormal align=left style='margin-top:3.0pt;text-align:left;
     page-break-after:avoid'><span style='font-size:8.0pt'>
-If this attribute is present, the DASH client is expected to decode the message data and only provide the decoded message to the application.</span></p>
+If this attribute is present, the DASH client is expected to decode the message data and only provide the decoded message to Application.</span></p>
     </td>
    </tr><tr>
     <td width="2%" valign=top style='width:2.54%;border-top:none;border-left:
@@ -897,8 +865,6 @@ If this attribute is present, the DASH client is expected to decode the message 
 </table>
   <figcaption class="table">MPD Event elements</figcaption>
 </figure>
-
-Note: The attribute @dispatchMode is not defined by ISO/IEC 23009-1. DASH-IF plans to propose addition of such attribute to the specification as soon as possible.
 
 As is shown in Figure 3, each MPD Event has three associated timing
 parameters along the media timeline:
@@ -981,8 +947,6 @@ In this document, we use the following common variable names instead of some of 
 - <var>duration</var> = <dfn>timed metadata sample duration</dfn>/<var>timescale</var>
 - <var>message_data</var> = <dfn>timed metadata sample data in mdat</dfn>
 
-Note: The timed metadata track currently doesn't include any signaling for its dispatch mode. DASH-IF will request MPEG to add a signaling for this parameter and will update this spec accordingly.
-
 # Events and timed metadata sample dispatch timing modes # {#event-metadata-dispatch}
 
 Figure 5 shows two possible dispatch timing models for DASH events and timed metadata samples.
@@ -995,11 +959,10 @@ In this figure, two modes are shown:
 
 1. <dfn>on-receive</dfn> Dispatch Mode: Dispatching at <var>AT</var> or earlier. Since the segment carrying an emsg/metadata sample has to be parsed before (or assuming zero decode/rendering delay as the latest at) <var>AT</var> on the media timeline, the event/metadata sample shall be dispatched at this time or before to Application in this mode. Application has a duration of <var>ST</var>-<var>AT</var> for preparing for the event. In this mode, the client doesn’t need to maintain states of Application events or metadata samples either. Application may have to maintain the state for any event/metadata sample, its <var>ST</var> and  <var>DU</var>, and monitor its activation duration, if it needs to. Application also needs to schedule each event/sample at its <var>ST</var>, so it must be time-aware to properly make use of these timing parameters.
 
-2. <dfn>on-start</dfn> Dispatch Mode: Dispatching exactly at <var>ST</var>, which is the start/presentation time of the event/metadata sample. The DASH player shall calculate the <var>ST</var> for each parsed event/metadata sample and dispatch the <var>message_data</var> at this exact moment. In this mode, since Application receives the event/sample at its start/presentation time, it needs to act on the received data right away, i.e. no advanced notice is given to Application in this mode. Application however may not need to maintain a state for the events and timed metadata samples, if the durations and/or the sequence and order of events/samples are not important to Application. Depending on the nature, meaning and relationship between different event instances/metadata samples, Application may need to maintain the state for them.
+2. <dfn>on-start</dfn> Dispatch Mode: Dispatching exactly at <var>ST</var>, which is the start/presentation time of the event/metadata sample. DASH Player shall calculate the <var>ST</var> for each parsed event/metadata sample and dispatch the <var>message_data</var> at this exact moment. In this mode, since Application receives the event/sample at its start/presentation time, it needs to act on the received data right away, i.e. no advanced notice is given to Application in this mode. Application however may not need to maintain a state for the events and timed metadata samples, if the durations and/or the sequence and order of events/samples are not important to Application. Depending on the nature, meaning and relationship between different event instances/metadata samples, Application may need to maintain the state for them.
 
-Note: ISO/IEC 23009-1 does not currently include a signaling for the desired dispatch mode in MPD or timed metadata track. DASH-IF beleives an explicit signaling of the dispatch mode is benifitial and will request MPEG to add the support for it. Otherwise, either DASH-IF addes extensions or signaling of the dispatch mode would be considered out-of-band.
-
-Note: According to ISO/IEC 23009-1, the parameter <var>duration</var> has a different meaning in each dispatch mode. In the case of on-start, <var>duration</var> defines the duration starting from <var>ST</var> in which the DASH player shall dispatch the event exactly once. In the nromal playback, the player dispatches the event at <var>ST</var>. However if the DASH player for instance seek to a moment after <var>ST </var> and during the above duration, then it must dispatch the event immidiately. In the case of on-receive, <var>duration</var> is a property of event instance and is defined by the <var>scheme_id</var> owner. 
+Note: According to ISO/IEC 23009-1, the parameter <var>duration</var> has a different meaning in each dispatch mode. In the case of on-start, <var>duration</var> defines the duration starting from <var>ST</var> in which DASH Player shall disp
+atch the event exactly once. In the nromal playback, the player dispatches the event at <var>ST</var>. However if DASH Player for instance seek to a moment after <var>ST </var> and during the above duration, then it must dispatch the event immidiately. In the case of on-receive, <var>duration</var> is a property of event instance and is defined by the <var>scheme_id</var> owner. 
 
 ## The Dispatch Processing Model ## {#dispatch-processing}
 
@@ -1009,24 +972,24 @@ Application subscribes to specific event stream as described in [[#prose-event-A
 
 The processing model varies depending on <var>dispatch_mode</var>. 
 
-The DASH player shall follow the processing model outlined in this section.
+DASH Player shall follow the processing model outlined in this section.
 
-The DASH player shall set up an [=Active Event Table=] for each subscribed
+DASH Player shall set up an [=Active Event Table=] for each subscribed
 <var>scheme_uri</var>/(<var>value</var>) in the case of <var>dispatch_mode</var> = <var>on_start</var>. <dfn>Active Event Table</dfn> maintains a single list of emsg’s <var>id</var> that have been dispatched.
 
 ### Common process  ### {#dispatch-common-process}
-The DASH player shall implement the following process:
+DASH Player shall implement the following process:
 
 1. Parse the emsg/timed metadata sample and retrieve <var>scheme_uri</var>/(<var>value</var>).
 
 2. If Application is not subscribed to the <var>scheme_uri</var>/(<var>value</var>) pair, end the processing of this emsg.
 
 ### [=on-receive=] processing   ### {#on-receive-proc}
-The DASH player shall implement the following process when <var>dispatch_mode</var> = <var>on_receive</var>:
+DASH Player shall implement the following process when <var>dispatch_mode</var> = <var>on_receive</var>:
 - Dispatch the event/timed metadata, including <var>ST</var>, <var>id</var>, <var>DU</var>, <var>timescale</var> and <var>message_data</var> as described in [[#prose-event-API]].
 
 ### [=on-start=] processing  ### {#on-start-proc}
-The DASH player shall implement the following process when <var>dispatch_mode</var> = <var>on_start</var>:
+DASH Player shall implement the following process when <var>dispatch_mode</var> = <var>on_start</var>:
 1. Derive the event instance/metadata sample's <var>ST</var> 
 
 2. If the current presentation time value is smaller than C, then go to Step 5.
@@ -1053,44 +1016,50 @@ maintained in the event/metadata buffer.
 
 The event/timed metadata API is an interface defined between a “DASH player” as defined in DASH-IF, or a “DASH client” as defined in 3GPP TS 26.247 or ISO/IEC 23009-1 and a device application in the exchange of subscription data and dispatch/transfer of matching DASH Event or timed metadata information between these entities. The Event/timed metadata API is shown at Figure 1.
 
-Note: In this document, the term "DASH player" is used.
+Note: In this document, the term "DASH Player" is used.
 
-The description of the API below is strictly functional, i.e. implementation-agnostic, is intended to be employed for the specification of the API in Javascript for the dash.js open source DASH player, and in IDL such as the OMG IDL or WebIDL. For example, the subscribeEvent() method as defined below may be mapped to the existing **on(type,listener,scope)** method as defined for the dash.js under **MediaPlayerEvents**.
+The description of the API below is strictly functional, i.e. implementation-agnostic, is intended to be employed for the specification of the API in Javascript for the dash.js open source DASH Player, and in IDL such as the OMG IDL or WebIDL. For example, the subscribeEvent() method as defined below may be mapped to the existing **on(type,listener,scope)** method as defined for the dash.js under **MediaPlayerEvents**.
 
-As part of this API and prior to any operations, the DASH player provides a list of <var>scheme_id</var>/(<var>value</var>) listed in MPD when it receives it. This list includes all events as well as <var>scheme_id</var> of all timed metadata tracks.  At this point the application is aware of the possible events and metadata delivered by the DASH player.
+As part of this API and prior to any operations, DASH Player provides a list of <var>scheme_id</var>/(<var>value</var>) listed in MPD when it receives it. This list includes all events as well as <var>scheme_id</var> of all timed metadata tracks.  At this point Application is aware of the possible events and metadata delivered by DASH Player.
 
 
-The subscription state diagram of the DASH player associated with the API is shown below in Figure 6:
+The subscription state diagram of DASH Player associated with the API is shown below in Figure 6:
 <figure class="figure">
   <img src="Images/eventsubscriptionstatediagram.png" />
-  <figcaption class="figure">State Diagram of the DASH player for the event/timed metadata API.
+  <figcaption class="figure">State Diagram of DASH Player for the event/timed metadata API.
 </figcaption></figure>
 
 The scope of the above state diagram is the entire set of
-applicable events/timed metadata streams being subscribed/unsubscribed, i.e. it is not indicating the state model of the DASH player in the context of a single Event/timed metadata stream subscription/un-subscription.
+applicable events/timed metadata streams being subscribed/unsubscribed, i.e. it is not indicating the state model of DASH Player in the context of a single Event/timed metadata stream subscription/un-subscription.
 
 The application subscribes to the reception of the desired event/timed metadata and associated information by the **subscribeEvent()** method. The parameters to be passed in this method are:
 
-  - <var>app_id</var> – (Optional) A unique ID for the Application subscribing to data dispatch from the DASH player. Depending on the platform/implementation this identifier may be used by the DASH player to maintain state information.
+  - <var>app_id</var> – (Optional) A unique ID for the Application subscribing to data dispatch from DASH Player. Depending on the platform/implementation this identifier may be used by DASH Player to maintain state information.
 
-  - <var>scheme_uri</var> – A unique identifier scheme for the associated DASH Event/metadata stream of interest to the Application. This string may use a URN or a URL syntax, and may correspond to either an MPD Event, an inband Event, or a timed metadata stream identifier. The <var>scheme_uri</var> may be formatted as a regular expression (regex). If a value of NULL is passed for <var>scheme_uri</var>, then the application subscribes to all existing event and metadata schemes described in the MPD. In this case, the value of <var>value</var> is irrelevant.
+  - <var>scheme_uri</var> – A unique identifier scheme for the associated DASH Event/metadata stream of interest to the Application. This string may use a URN or a URL syntax, and may correspond to either an MPD Event, an inband Event, or a timed metadata stream identifier. The <var>scheme_uri</var> may be formatted as a regular expression (regex). If a value of NULL is passed for <var>scheme_uri</var>, then Application subscribes to all existing event and metadata schemes described in the MPD. In this case, the value of <var>value</var> is irrelevant.
 
   - <var>value</var> – A value of the event or timed metadata stream within the scope of the above <var>scheme_uri</var>, optional to include. When not present, no default value is defined – i.e., no filtering criterion is associated with the Event scheme identification.
 
   - <var>dispatch_mode</var> – Indicates when the event handler function identified in the <var>callback_function</var> argument should be called:
     
-      - <var>dispatch_mode</var> = <var>on_receive</var> – provide the event/timed metadata sample data to the Application as soon as it is detected by DASH player;
+      - <var>dispatch_mode</var> = <var>on_receive</var> – provide the event/timed metadata sample data to the Application as soon as it is detected by DASH Player;
     
       - <var>dispatch_mode</var> = <var>on_start</var> – provide the event/timed metadata sample data to the App at the start time of Event message or at the presentation time of timed metadata sample.
 
   - <var>callback_function</var> – the name of the function to be (asynchronously) called for an event corresponding to the specified
     <var>scheme_uri</var>/(<var>value</var>). The callback function is invoked with the arguments described below.
 
+Note: ISO/IEC 23009-1 does not include amy explicit signaling for the desired dispatch mode in MPD or timed metadata track. In the current design, Application relay its desired dispatch mode to DASH Player when it subscribes to an event stream or timed metadata track. In this approach, the scheme owner should consider the dispatch mode as part of the scheme design and define whether any specific dispatch mode should be selected during the design of the scheme. 
+
+Note: (Editor's Note-to be removed at the end of Community Review Period) If any service provider or application developer beleives an explicit signaling of dispatch mode is needed for some use-cases, they are requested to provide such use-case during Community Review Period of this document to DASH-IF for considering introducing a @dispatchMode attribute in MPD and submitting the request to MPEG.
+
+ the DASH-IF beleives an explicit signaling of the dispatch mode is benifitial and will request MPEG to add the support for it. Otherwise, either DASH-IF addes extensions or signaling of the dispatch mode would be considered out-of-band.
+
 Upon successful execution of the event/timed metadata subscription call
-(for which the DASH player will return a corresponding
-acknowledgment), the DASH player shall monitor the source of
+(for which DASH Player will return a corresponding
+acknowledgment), DASH Player shall monitor the source of
 potential Event stream information, i.e., the MPD or incoming DASH
-Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>value</var>). The parentheses around value is because this parameter may be absent in the event/timed metadata subscription call. When a matching event/metadata sample is detected, the DASH player invokes the function specified in the callbackFunction argument with the following parameters. It should additionally provide to the Application the current presentation time at the DASH player when performing the dispatch action. The parameters to be passed in this method are shown in Table 3 below:
+Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>value</var>). The parentheses around value is because this parameter may be absent in the event/timed metadata subscription call. When a matching event/metadata sample is detected, DASH Player invokes the function specified in the callbackFunction argument with the following parameters. It should additionally provide to the Application the current presentation time at DASH Player when performing the dispatch action. The parameters to be passed in this method are shown in Table 3 below:
 
 <figure class="table">
 <table border=1 cellspacing=0 cellpadding=0
@@ -1178,7 +1147,7 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
 
 When the duration of the event is unknown, the vairable <var>duration</var> shall be set to its maximum value (xFFFFFFFF =  4,294,967,295). 
 
-Note:  In the case of ‘emsg’ version 0, the DASH player is expected to calculate [=presentation_time=] from [=presentation_time_delta=].
+Note:  In the case of ‘emsg’ version 0, DASH Player is expected to calculate [=presentation_time=] from [=presentation_time_delta=].
 
 
 In order to remove a listener the **unsubscribeEvent()** function is
