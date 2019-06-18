@@ -9,20 +9,23 @@
 
 In the above figure:
 
-1. DASH Player processes the MPD. If the manifest
-    includes any MPD Events, it parses them and appends them to Event & Timed Metadata Buffer.
+1. DASH Player processes the received MPD. The manifest information including the list of events schemes and values, and timed metadata track schemes are passed to Application.
 
-2. Based on the MPD, DASH Player manages fetching and parsing the Segments before appending them to Media Buffer.
+2. Application subscribes to the event and timed metadata track schemes in which is interested, with the desired dispatch mode. 
 
-3. Parsing a Segment includes:
+3. If the manifest includes any MPD Events, DASH Player parses them and appends them to Event & Timed Metadata Buffer.
+
+4. Based on the MPD, DASH Player manages fetching and parsing the Segments before appending them to Media Buffer.
+
+5. Parsing a Segment includes:
     
     1. Parse the high-level boxes such as Segment Index (sidx) and Event Message boxes, and append Event Message boxes to the Event & Metadata Buffer.
     2. For an Application-related timed metadata track, extracting the data samples, and appending them to Event & Metadata Buffer.
     3. For media segments, parse the segments and append them to Media Buffer.
 
-4. Event & Metadata Buffer is a FIFO buffer, passing the events and timed metadata samples to Event & Metadata Synchronizer and Dispatcher function.
+6. Event & Metadata Buffer is a FIFO buffer, passing the events and timed metadata samples to Event & Metadata Synchronizer and Dispatcher function.
 
-5. The DASH Player-specific Events are dispatched to DASH Player's Control, Selection & Heuristic Logic, while the Application-related Events and timed metadata track samples are dispatched to Application as the following. If an Application is subscribed to a specific Event or timed metadata stream, dispatch the corresponding event instances or timed metadata samples, according to the dispatch mode:
+7. The DASH Player-specific Events are dispatched to DASH Player's Control, Selection & Heuristic Logic, while the Application-related Events and timed metadata track samples are dispatched to Application as the following. If an Application is subscribed to a specific Event or timed metadata stream, dispatch the corresponding event instances or timed metadata samples, according to the dispatch mode:
     1. For [=on-receive=] dispatch mode, dispatch the Event information or timed metadata samples as soon as they are received(or no later than <var>AT</var>).
     2. For [=on-start=] dispatch mode, dispatch the Event information or timed metadata samples at their associated presentation time, using the synchronization signal from the media decoder.
 
@@ -193,9 +196,9 @@ Note: <var>ST</var> is always equal to or larger than <var>AT</var> in both vers
 
 Note: Since the media sample timescales might be different than emsg's timescale, <var>ST</var> might not line up with a media sample if different timescales are used.
 
-Note: If various Adaptation Sets carry the same events, different Adaptation Sets/Representations with different PTOs, the [=presentation_time_delta=] and/or [=presentation_time=] values might be different per Adaptation Set/Representation, i.e. the same emsg box can not be replicated over multiple Representations and/or Adaptations Sets.
+Note: If various Adaptation Sets carry the same events, different Adaptation Sets/Representations with different PTOs, the [=presentation_time_delta=] and/or [=presentation_time=] values might be different per Adaptation Set/Representation, i.e. the same emsg box can not be replicated over multiple Representations and/or Adaptations Sets. Therefore, the use of same PTOs cross Adaptation Sets/Representations which carry the same events is encouraged.
 
-Note: In the case of [=CMAF=], <var>PeriodStart</var> is the CMAF track's earliest presentation time.
+Note: In the case of [=CMAF=], <var>PeriodStart</var> is the CMAF track's earliest presentation time. If during the segment creation, this time is not known, it is recommeded to use the [=presentation_time_delta=].
 
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
 
