@@ -921,7 +921,8 @@ In this document, we use the following common variable names instead of some of 
 - <var>message_data</var> = <dfn>timed metadata sample data in mdat</dfn>
 
 # Timed metadata tracks with embedded event message boxes  # {#embedded-metadata-track}
-Note: [Editor's note] This clause is still under discussion. Event TF and IOP WG needs to review and approve it.
+
+Note: (Editor's note) This clause is still under discussion. Event TF and IOP WG needs to review and approve it.
 
 Compared to MPD and inband events, which are interleaved with the media for inband events or embedded in MPD, 
 the timed metadata track is a structure for storing timed metadata separately, self contained, in an ISOBMFF formatted file. 
