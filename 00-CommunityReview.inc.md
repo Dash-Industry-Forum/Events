@@ -6,17 +6,17 @@
                         <td border="0"  colspan="15" valign="top"><p align="center"><strong>CHANGE REQUEST</strong></p></td>
                     </tr>
                     <tr style= "height: 10px;">
-                        <td style= "height: 10px;" colspan="4" bgcolor="#FFEE58"><p align="center"><strong> DASH-IF IOP</strong></p></td> 
-                        <td style= "height: 10px;" colspan="2"><p align="center"><strong>CR</strong></p></td>
-                        <td style= "height: 10px;" width="60" bgcolor="#FFEE58"></td>
-                        <td style= "height: 10px;"><p align="center"><strong>rev</strong></p></td>
+                        <td colspan="4" bgcolor="#FFEE58"><p align="center"><strong> DASH-IF IOP</strong></p></td> 
+                        <td colspan="2"><p align="center"><strong>CR</strong></p></td>
+                        <td width="60" bgcolor="#FFEE58"></td>
+                        <td><p align="center"><strong>rev</strong></p></td>
                         <td colspan="2" bgcolor="#FFEE58"><p align="center"><strong>-</strong></p></td>
-                        <td style= "height: 10px;" colspan="3"><p align="center"><strong>Current version:</strong> </p></td>
-                        <td style= "height: 10px;" colspan="2" bgcolor="#FFEE58"> <p align="center"> V4.3</p></td>
+                        <td colspan="3"><p align="center"><strong>Current version:</strong> </p></td>
+                        <td colspan="2" bgcolor="#FFEE58"> <p align="center"> V4.3</p></td>
                     </tr>
                     <tr height= "%10"> </tr>
                     <tr>
-                        <td colspan = "2" valign="middle"><p><strong><em>Status: </em></strong></p></td>
+                        <td colspan = "2" valign="middle"><p><strong><em>Status:</em></strong></p></td>
                         <td style="border: 1px solid black"  width="20" valign="middle" bgcolor="#FFEE58"> 
                         </td>
                         <td colspan = "2" valign="middle"><p>Draft</p> </td>

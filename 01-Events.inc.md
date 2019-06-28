@@ -77,37 +77,37 @@ Table 1 shows the emsg box format in DASH:
 <td></td>
 <td></td>
 <td>string</td>
-<td><dfn>scheme_id_uri</dfn>;</td>
+<td>scheme_id_uri;</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td>string</td>
-<td><dfn>value</dfn>;</td>
+<td>value;</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>unsigned int(32)</td>
-<td><dfn>timescale</dfn>;</td>
+<td>timescale_v0;</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td>unsigned int(32)</td>
-<td><dfn>presentation_time_delta</dfn>;</td>
+<td>presentation_time_delta;</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>unsigned int(32)</td>
-<td><dfn>event_duration</dfn>;</td>
+<td>event_duration;</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td>unsigned int(32)</td>
-<td><dfn>id</dfn>;</td>
+<td>id;</td>
 </tr>
 <tr class="even">
 <td></td>
@@ -118,37 +118,37 @@ Table 1 shows the emsg box format in DASH:
 <td></td>
 <td></td>
 <td>unsigned int(32)</td>
-<td>[=timescale=];</td>
+<td>timescale_v1;</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>unsigned int(64)</td>
-<td><dfn>presentation_time</dfn>;</td>
+<td>presentation_time;</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td>unsigned int(32)</td>
-<td>[=event_duration=];</td>
+<td>event_duration;</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>unsigned int(32)</td>
-<td>[=id=];</td>
+<td>id;</td>
 </tr>
 <tr class="odd">
 <td></td>
 <td></td>
 <td>string</td>
-<td>[=scheme_id_uri=];</td>
+<td>scheme_id_uri;</td>
 </tr>
 <tr class="even">
 <td></td>
 <td></td>
 <td>string</td>
-<td>[=value=];</td>
+<td>value;</td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -158,7 +158,7 @@ Table 1 shows the emsg box format in DASH:
 <tr class="even">
 <td></td>
 <td colspan="2">unsigned int(8)</td>
-<td><dfn>message_data()</dfn>;</td>
+<td>message_data();</td>
 </tr>
 <tr class="odd">
 <td colspan="4">}</td>
@@ -172,7 +172,7 @@ Table 1 shows the emsg box format in DASH:
 <figcaption class="table">The emsg box format and parameters</figcaption>
 </figure>
 
-
+Note: In the table above, parameters with timescale_v0 and timescale_v1 are same parameters. The additional suffixes are for purpose of clear refenencing in the equation below.  These parameters are defined as [=timescale=] in [[!MPEGDASH]].
 
 The <var>ST</var> of an event can be calculated using values in its emsg box:
 
@@ -180,9 +180,9 @@ The <var>ST</var> of an event can be calculated using values in its emsg box:
 <figure class="equation">
 
 $$ST = \begin{cases}
-AT + \frac{presentation\_time\_delta}{timescale} \space
+AT + \frac{presentation\_time\_delta}{timescale\_v0} \space
 \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad  version=0\\ 
-PeriodStart +  \frac{SegmentBase@presentationTimeOffset}{SegmentBase@timescale} + \frac{presentation\_time}{timescale}\qquad \qquad version=1
+PeriodStart +  \frac{SegmentBase@presentationTimeOffset}{SegmentBase@timescale} + \frac{presentation\_time}{timescale\_v1}\qquad \qquad version=1
 \end{cases}
 $$
 
@@ -190,7 +190,7 @@ $$
 </figure>
 
 
-Where <var>PeriodStart</var> is the corresponding Period‘s start time, and <{SegmentBase/presentationTimeoffset}> and <{SegmentBase/timescale}> are the [=Presentation Time Offset=] (PTO) and [=time scale=] of the corresponding Represenation.
+Where <var>PeriodStart</var> is the corresponding Period‘s start time, and [=SegmentBase@presentationTimeoffset=]" and [=SegmentBase@timescale=] belong to the corresponding Represenation.
 
 Note: <var>ST</var> is always equal to or larger than <var>AT</var> in both versions of emsg.
 
@@ -210,7 +210,7 @@ In this document, we use the following common variable names instead of some of 
 
 ## MPD Events timing model ## {#mpd-event-timing}
 
-MPD Events carry the similar data model as inband Events. However, the former type is are carried in the MPD, under the Period elements. Each Period event has <{EventStream}> element(s), defining the <{EventStream/schemeIdUri}>, <{EventStream/value}> , <{EventStream/timescale}> and a sequences of <{Event}> elements. Each event may have <{Event/presentationTime}>, <{Event/duration}>, <{Event/id}> and <{Event/messageData}> attributes, as shown in Table 2.
+MPD Events carry the similar data model as inband Events. However, the former type is are carried in the MPD, under the Period elements. Each Period event has <{EventStream}> element(s), defining the [=EventStream@schemeIdUri=], [=EventStream@value=] , [=EventStream@timescale=] and a sequences of <{Event}> elements. Each event may have [=Event@presentationTime=], [=Event@duration=], [=Event@id=] and [=Event@messageData=] attributes, as shown in Table 2.
 
 
 <figure class="table">
@@ -349,7 +349,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="EventStream">@<dfn>schemeIdUri</dfn></dl></span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'>@schemeIdUri</span></p>
     </td>
     <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -384,7 +384,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="EventStream">@<dfn>value</dfn></dl></span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'>@value</span></p>
     </td>
     <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -417,7 +417,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="EventStream">@<dfn>timescale</dfn></dl></span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'>@timescale</span></p>
     </td>
     <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -451,7 +451,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="EventStream">@<dfn>presentationTimeOffset</dfn></dl></span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'>@presentationTimeOffset</span></p>
     </td>
     <td width="13%" valign=top style='width:13.84%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -600,7 +600,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="Event">@<dfn>presentationTime</dfn></dl></span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'>@presentationTime</span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -647,7 +647,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="Event">@<dfn>duration</dfn></dl></span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'>@duration</span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -693,7 +693,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="Event">@<dfn>id</dfn></dl></span></p>
+    style='font-size:9.0pt;font-family:"Courier New"'>@id</span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -739,7 +739,7 @@ MPD Events carry the similar data model as inband Events. However, the former ty
     <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="Event">@<dfn>contentEncoding</dfn></dl></span></p>
+    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'>@contentEncoding</span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -782,7 +782,7 @@ If this attribute is present, the DASH client is expected to decode the message 
     <td width="24%" valign=top style='width:24.18%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
-    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'><dl dfn-type="element-attr" dfn-for="Event">@<dfn>messageData</dfn></dl></span></p>
+    <p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New"'>@messageData</span></p>
     </td>
     <td width="14%" valign=top style='width:14.16%;border-top:none;border-left:
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -839,15 +839,13 @@ parameters along the media timeline:
 1.  The PeriodStart Time (<var>AT</var>) of the Period element containing the EventStream element.
 
 2.  Event Start Time (<var>ST</var>): the moment in the media timeline that a given MPD Event
-    becomes active and can be calculated from the attribute <{Event@presentationTime}>.
+    becomes active and can be calculated from the attribute [=Event@presentationTime=].
 
 3.  Event duration (<var>DU</var>): the duration for which the event is active that
-    can be calculated from the attribute <{Event@duration}>.
+    can be calculated from the attribute [=Event@duration=].
 
 Note that the first parameter is inherited from the Period containing
-the Events and only the 2<sup>nd</sup> and 3<sup>rd</sup> parameters are
-explicitly included in the <{Event}> element. Each <{EventStream}> also
-has <{EventStream/timescale}> to scale the above parameters.
+the Events and only the 2<sup>nd</sup> and 3<sup>rd</sup> parameters are explicitly included in the <{Event}> element. Each <{EventStream}> also has [=EventStream@timescale=] to scale the above parameters.
 
 Figure 3 demonstrates these parameters in the media timeline.
 <figure class="figure">
@@ -869,25 +867,25 @@ calculated using values in its <{EventStream}> and <{Event}> elements:
 
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
 
-- <var>scheme_id</var> = <{EventStream/schemeIdUri}>
-- <var>value</var> = <{EventStream/value}>
+- <var>scheme_id</var> = [=EventStream@schemeIdUri=]
+- <var>value</var> = [=EventStream@value=]
 - <var>presentation_time</var> = <var>ST</var>
-- <var>duration</var> = <{Event/duration}>/<{EventStream/timescale}>
-- <var>id</var> = <{Event/id}>
-- <var>message_data</var> = decode64(<{Event/messageData}>)
+- <var>duration</var> = [=Event@duration=]/[=EventStream@timescale=]
+- <var>id</var> = [=Event@id=]
+- <var>message_data</var> = decode64([=Event@messageData=])
 
 In which decode64() function is:
 <figure class="equation">
 
   $$decode64(x) = \begin{cases}
-x\space\qquad\qquad\qquad\qquad\qquad \space \space \space \space   @contentEncoding\space Not \space Present\\ 
-base64 \space decoding \space of \space (x) \qquad @contentEncoding \space  = \space base64
+x\space\qquad\qquad\qquad\qquad\qquad \space \space \space \space \space  Event@contentEncoding\space \space \space not \space present\\ 
+base64 \space decoding \space of \space (x) \qquad Event@contentEncoding \space  = \space base64
 \end{cases}
 $$
   <figcaption class="equation"> decode64 function 
 </figcaption></figure>
 
-Note that the DASH client shall Base64 decode the <{Event/messageData}> value if the received <{Event/contentEncoding}> value is base64.
+Note that the DASH client shall Base64 decode the [=Event@messageData=] value if the received [=Event@contentEncoding=] value is base64.
 
 ## Timed metadata sample timing model ## {#timed-metadata-timing}
 
@@ -1012,9 +1010,13 @@ The application subscribes to the reception of the desired event/timed metadata 
       - <var>dispatch_mode</var> = <var>on_receive</var> – provide the event/timed metadata sample data to the Application as soon as it is detected by DASH Player;
     
       - <var>dispatch_mode</var> = <var>on_start</var> – provide the event/timed metadata sample data to the App at the start time of Event message or at the presentation time of timed metadata sample.
+      
+      The default mode for <var>dispatch_mode</var> should to be set to <var>on_receive</var>, i.e. if the dispatch_mode is not passed during the subscribe_first operation, DASH Player should assume <var>dispatch_mode</var> = <var>on_receive</var> for that specific subscription. 
 
   - <var>callback_function</var> – the name of the function to be (asynchronously) called for an event corresponding to the specified
     <var>scheme_uri</var>/(<var>value</var>). The callback function is invoked with the arguments described below.
+
+ 
 
 Note: ISO/IEC 23009-1 does not include amy explicit signaling for the desired dispatch mode in MPD or timed metadata track. In the current design, Application relay its desired dispatch mode to DASH Player when it subscribes to an event stream or timed metadata track. In this approach, the scheme owner should consider the dispatch mode as part of the scheme design and define whether any specific dispatch mode should be selected during the design of the scheme. 
 
@@ -1022,9 +1024,7 @@ Note: (Editor's Note-to be removed at the end of Community Review Period) If any
 
  the DASH-IF beleives an explicit signaling of the dispatch mode is benifitial and will request MPEG to add the support for it. Otherwise, either DASH-IF addes extensions or signaling of the dispatch mode would be considered out-of-band.
 
-Upon successful execution of the event/timed metadata subscription call
-(for which DASH Player will return a corresponding
-acknowledgment), DASH Player shall monitor the source of
+Upon successful execution of the event/timed metadata subscription call (for which DASH Player will return a corresponding acknowledgment), DASH Player shall monitor the source of
 potential Event stream information, i.e., the MPD or incoming DASH
 Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>value</var>). The parentheses around value is because this parameter may be absent in the event/timed metadata subscription call. When a matching event/metadata sample is detected, DASH Player invokes the function specified in the callbackFunction argument with the following parameters. It should additionally provide to the Application the current presentation time at DASH Player when performing the dispatch action. The parameters to be passed in this method are shown in Table 3 below:
 
@@ -1048,7 +1048,7 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
                 <tbody>
                     <tr class="even" style="height: 21px;">
                         <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">scheme_id</td>
-                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/schemeIdUri}&gt;</td>
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=EventStream@schemeIdUri=]</td>
                         <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=scheme_id_uri=]</td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata track URI=]</span></td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>&nbsp;</span></td>
@@ -1057,7 +1057,7 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
                     </tr>
                     <tr class="odd" style="height: 21px;">
                         <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">value</td>
-                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{EventStream/value}&gt;</td>
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=EventStream@value=]</td>
                         <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=value=]</td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"></td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"></td>
@@ -1066,7 +1066,7 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
                     </tr>
                     <tr class="odd" style="height: 21px;">
                         <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><var>presentation_time</var></td>
-                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/presentationTime}&gt;</td>
+                        <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=Event@presentationTime=]</td>
                         <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=presentation_time=]</td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample presentation time=]</span></td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(64) <br> 
@@ -1076,7 +1076,7 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
                     </tr>
                     <tr class="even" style="height: 21px;">
                         <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">duration</td>
-                        <td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/duration}&gt;</td>
+                        <td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=Event@duration=]</td>
                         <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=event_duration=]</td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample duration=]</span></td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(32) <br> 
@@ -1086,7 +1086,7 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
                     </tr>
                     <tr class="odd" style="height: 21px;">
                         <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">id</td>
-                        <td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/id}&gt;</td>
+                        <td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=Event@id=]</td>
                         <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=id=]</td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"></td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(32)</span></td>
@@ -1095,7 +1095,7 @@ Segments, for matching values of the subscribed <var>scheme_uri</var>/(<var>valu
                     </tr>
                     <tr class="even" style="height: 21px;">
                         <td  style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">message_data</td>
-                        <td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">&lt;{Event/messageData}&gt;</td>
+                        <td style="width: 7.85865%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=Event@messageData=]</td>
                         <td style="width: 10.8914%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;">[=message_data()=]</td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; height: 21px; text-align: left;"><span>[=timed metadata sample data in mdat=]</span></td>
                         <td style="width: 3.125%; border-top: none; border-left: 1pt solid black; border-bottom: 1pt solid black; border-right: none; padding: 0in 5.4pt; text-align: left; height: 21px;"><span>unsigned int(8) x messageSize</span></td>
