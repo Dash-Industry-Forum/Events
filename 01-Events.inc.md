@@ -11,35 +11,35 @@ In the above figure:
 
 1. DASH Player processes the received MPD. The manifest information including the list of events schemes and values, and timed metadata track schemes are passed to Application.
 
-2. Application subscribes to the event and timed metadata track schemes in which it is interested, with the desired dispatch mode. 
+2. Application subscribes to the event and timed metadata track schemes in which is interested, with the desired dispatch mode. 
 
-3. If the manifest includes any MPD Events, the DASH Player parses them and appends them to the Event & Timed Metadata Buffer.
+3. If the manifest includes any MPD Events, DASH Player parses them and appends them to Event & Timed Metadata Buffer.
 
-4. Based on the MPD, the DASH Player manages the fetching and parsing of the Segments before appending them to the Media Buffer.
+4. Based on the MPD, DASH Player manages fetching and parsing the Segments before appending them to Media Buffer.
 
 5. Parsing a Segment includes:
     
-    1. Parsing the high-level boxes such as Segment Index (sidx) and Event Message boxes, and appending Event Message boxes to the Event & Metadata Buffer.
+    1. Parse the high-level boxes such as Segment Index (sidx) and Event Message boxes, and append Event Message boxes to the Event & Metadata Buffer.
     2. For an Application-related timed metadata track, extracting the data samples, and appending them to Event & Metadata Buffer.
-    3. For media segments, parsing the segments and appending them to the Media Buffer.
+    3. For media segments, parse the segments and append them to Media Buffer.
 
-6. The Event & Metadata Buffer is a FIFO buffer, passing the events and timed metadata samples to Event & Metadata Synchronizer and Dispatcher function.
+6. Event & Metadata Buffer is a FIFO buffer, passing the events and timed metadata samples to Event & Metadata Synchronizer and Dispatcher function.
 
-7. The DASH Player-specific Events are dispatched to DASH Player's Control, Selection & Heuristic Logic, while the Application-related Events and timed metadata track samples are dispatched to the application as the following. If an Application is subscribed to a specific Event or timed metadata stream, dispatch the corresponding event instances or timed metadata samples, according to the dispatch mode:
-    1. For [=on-receive=] dispatch mode, dispatch the Event information or timed metadata samples as soon as they are received (or no later than <var>AT</var>).
+7. The DASH Player-specific Events are dispatched to DASH Player's Control, Selection & Heuristic Logic, while the Application-related Events and timed metadata track samples are dispatched to Application as the following. If an Application is subscribed to a specific Event or timed metadata stream, dispatch the corresponding event instances or timed metadata samples, according to the dispatch mode:
+    1. For [=on-receive=] dispatch mode, dispatch the Event information or timed metadata samples as soon as they are received(or no later than <var>AT</var>).
     2. For [=on-start=] dispatch mode, dispatch the Event information or timed metadata samples at their associated presentation time, using the synchronization signal from the media decoder.
 
 # Event and Timed metadata sample timing models # {#event-metadata-timing}
 
 ## Inband Event timing parameters ## {#Inband-event-timing}
 
-Figure 2 presents the timing of an inband Events along the media timeline:
+Figure 2 presents the timing of an inband Event along the media timeline:
 <figure class="figure">
 	<img src="Images/inbandeventtiming.png" />
     <figcaption class="figure">The inband event timing parameter on the media timeline</figcaption>
 </figure>
 
-As shown in Figure 2, every inband Event can be described by three timing parameters on the media timeline:
+As shown in Figure 2, every inband Event can be described with three timing parameters on the media timeline:
 
 1. Event Arrival Time (<var>AT</var>) which is the earliest presentation time of the Segment containing the Event Message box.
 
@@ -49,13 +49,13 @@ As shown in Figure 2, every inband Event can be described by three timing parame
 
 An inband Event is inserted in the beginning of a Segment. Since each media segment has an earliest presentation time equal to (<var>AT</var>), <var>AT</var> of the Segment carrying the Event Message box can be considered as the location of that box on the media timeline. DASH Player has to fetch and parse the Segment before or at its <var>AT</var> (at <var>AT</var> when it's assumed that the decoding and rendering of the segment incurs practically zero delay). Therefore, the Event inserted in a Segment at its <var>AT</var> time will be ready to be processed and fetched no later than <var>AT</var> on the media timeline.
 
-The second timing parameter is Event Presentation/Start Time (<var>ST</var> ). <var>ST</var> is the moment in the media timeline that the Event becomes active. This value can be calculated using the parameters included in the DashEventMessageBox.
+The second timing parameter is Event Presentation/Start Time (<var>ST</var> ). <var>ST</var> is the moment in the media timeline that the Event becomes active. This value can be calculated using the parameters included in Event Message box.
 
 The third parameter is Event Duration (<var>DU</var> ), the duration for which the Event is considered to be active. <var>DU</var>  is also signaled in the Event Message box using a specific value.
 
-## Dash Event message box format and event timing parameters ## {#emsg-format}
+## Event message box format and event timing parameters ## {#emsg-format}
 
-Table 1 shows the DASHEventMessageBox emsg box format defined in MPEG DASH:
+Table 1 shows the emsg box format in DASH:
 
 <figure class="table">
 <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 bgcolor="#DDDDDD"
@@ -208,11 +208,9 @@ In this document, we use the following common variable names instead of some of 
 - <var>duration</var> = [=event_duration=]/[=timescale=]
 - <var>message_data</var> = [=message_data()=]
 
-
-
 ## MPD Events timing model ## {#mpd-event-timing}
 
-MPD Events carry a similar data model as inband Events. However, the former type is carried in the MPD, under the Period elements. Each Period event has <{EventStream}> element(s), defining the <{EventStream/schemeIdUri}>, <{EventStream/value}> , <{EventStream/timescale}> and a sequences of <{Event}> elements. Each event may have <{Event/presentationTime}>, <{Event/duration}>, <{Event/id}> and <{Event/messageData}> attributes, as shown in Table 2.
+MPD Events carry the similar data model as inband Events. However, the former type is are carried in the MPD, under the Period elements. Each Period event has <{EventStream}> element(s), defining the <{EventStream/schemeIdUri}>, <{EventStream/value}> , <{EventStream/timescale}> and a sequences of <{Event}> elements. Each event may have <{Event/presentationTime}>, <{Event/duration}>, <{Event/id}> and <{Event/messageData}> attributes, as shown in Table 2.
 
 
 <figure class="table">
@@ -466,7 +464,7 @@ MPD Events carry a similar data model as inband Events. However, the former type
     none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
     padding:0in 5.4pt 0in 5.4pt'>
     <p class=MsoNormal style='margin-top:3.0pt;page-break-after:avoid'><span
-    style='font-size:9.0pt'>specifies the [=Presentation Time Offset=] of this Event Stream that aligns with the start of the Period and the presentationTimeOffset defined in the EventStreamElement. So, any Event contained in this Event Stream is mapped to the Period timeline by using the Event presentation time corrected by the value of the presentation time offset.</span></p>
+    style='font-size:9.0pt'>specifies the presentation time offset of this Event Stream that aligns with the start of the Period. Any Event contained in this Event Stream is mapped to the Period timeline by using the Event presentation time corrected by the value of the presentation time offset.</span></p>
     <p class=MsoNormal align=left style='text-align:left'><span
     style='font-size:9.0pt'>The value of the presentation time offset in seconds is the division of the value of this attribute and the value of the @timescale attribute.</span></p>
     </td>
@@ -893,86 +891,32 @@ Note that the DASH client shall Base64 decode the <{Event/messageData}> value if
 
 ## Timed metadata sample timing model ## {#timed-metadata-timing}
 
-An alternative way to convey information relating to a media is using timed metadata tracks. Timed metadata tracks are ISOBMFF 
-formatted tracks that obey the following characteristics:
-
-1. The <b> sample description box </b> stsd in the MovieBox SHALL contain a sampleEntry that is a URIMetaSampleEntry, to signal that the media samples contain             metadata based on a urn in a URIBox to signal that scheme.
-2. the <b>the Handler Box </b> hdlr has handler_type set to <b>meta</b> to signal the fact that the track contains metadata
-3. the null media header <b>nmhd</b> is used in the minf box
-4. contain metadata (non media data relating to presentation) in embedded in ISOBMFF samples
-
-Figure 4 shows the timing model for a simple ISOBMFF timed metadata sample.
+Figure 4 shows the timing model for a given timed metadata sample.
 <figure class="figure">
   <img src="Images/timedmetadataeventtiming.png" />
   <figcaption class="figure">Timing parameters of a timed metadata sample on the media timeline
 </figcaption></figure>
 
-As shown in this figure, the metadata sample timing includes metadata
+As shown in this figure, the metadata sample timing including metadata
 sample presentation time (<var>ST</var>) and metadata sample duration (<var>DU</var>). Also
-one or more metadata samples are included in a segment with Segment start time (<var>AT</var>).
+one or multiple metadata samples are included in a segment with Segment start time (<var>AT</var>).
 
-Note that the metadata sample duration can not go beyond fragment 
-duration for fragmented metadata tracks, i.e. to the next fragment. In the case of [=CMAF=], the same
-constraints are maintained for CMAF Chunks.
+Note that the metadata sample duration can not go beyond segment
+duration, i.e. to the next segment. In the case of [=CMAF=], the same
+constraints is maintained for CMAF Chunks.
 
 In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
 
 
-- <var>scheme_id</var> = <dfn>timed metadata track URI</dfn> , signalled in URIBox in URIMetaSampleEntry
-- <var>timescale</var> = <b>timed metadata track </b> timescale in mdhd box. 
+- <var>scheme_id</var> = <dfn>timed metadata track URI</dfn>
+- <var>timescale</var> = timed metadata track timescale in mdhd box. 
 - <var>presentation_time</var> = <dfn>timed metadata sample presentation time</dfn>/<var>timescale</var>
 - <var>duration</var> = <dfn>timed metadata sample duration</dfn>/<var>timescale</var>
 - <var>message_data</var> = <dfn>timed metadata sample data in mdat</dfn>
 
-Compared to MPD and inband events, which are interleaved with the media for inband events or embedded in the mpd, 
-the timed metadata track is a structure for storing timed metadata separately, self contained, in an ISOBMFF formatted file. 
-However, some drawbacks of such a simple ISOBMFF timed metadata track are that:
-- <var>value</var>=<b> value in DashEventMessageBox</b> is not present to signal subschemes 
-- <var>id</var>=<b> id used in DashEventMessageBox </b> is not used, so processing cannot detect duplicate metadata samples 
-- multiple samples at the same time are not allowed, due to ISOBMFF constraints (duration 0 is not allowed, two samples with same presentation time in track is not allowd), for mpd and inband events this is allowed
-- restricting the track to one scheme per timed metadata track is restrictive, in mpd and inband events different schemes can be used
-- value and id are not available and cannot be passed to the API 
-- new timed metadata occuring before the prior sample duration is finished is not allowed, i.e. overlapping events, however, this is possible with inband and mpd events  
-
-Therefore a DashEvent compatible timed metadata track formatting that sovles these drawbacks is defined and recommended.
-The recommended DashEvent compatible timed metadata track is formatted as follows:  
-
-- It embeds the DashEventMessageBox in ISOBMFF samples to encapsulate the timed metadata. 
-- It signal in the URIMetaSampleEntry (scheme_id) urn:mpeg:dash:event:2012 or another URN defined to signal DASHEventMessageBoxes 
-- Each ISOBMFF sample will contain one or more DashEventMessageBoxes (in the mdat box), with the presentation time of the ISOBMFF sample and DashEventMessageBox equal to each other
-- This is one DashEventMessageBox, if a single event/timed metadata occurs at that presentation time corresponding to the ISOBMFF sample 
-- These are Multiple DashEventMessageBox if multiple events start at that presentation time corresponding to the ISOBMFF sample
-- the DashEventMessageBox schemeIdUri can be used to signal the scheme_id of the current event/metadata 
-- The message_data of the DashEventMessageBox contains the payload, that would normally be carried in the timed metadata sample directly, or in message_data 
-- the value and id fields can be used consistently as when using inband events, i.e. with the same meaning to detect duplicates and signal sub schemes
-- the timescale SHOULD be equal to the timescale in the MediaHeader mdhd
-- The DashEventMessageBox duration SHOULD equal the ISOBMFF duration of the timed metadata sample , however, when an new event/metadata sample is
-- occuring before the current is over, the DashEventMessageBox signals the acual duration, while the ISOBMFF signals the difference in presentation time of the current and next occuring event/metadata sample. This makes it possible to store overlapping metadata/events, without overlapping timeline in the ISOBMFF track. 
-
-A timed metadata track structured this way will: 
-
-- Allow the client processing model to use the <var>value</var> and <var>id</var> for passing to client and detecting duplicates 
-- Multiple samples/events with the same presentation time may exist, i.e. by embedding multiple DashEventMessageBoxes in one ISOBMFF sample
-- Overlapping events/samples may exist
-- Multiple schemeIdUri per metadata track may exist 
-
-This format maintains the advantage of timed metadata track, which is having a separated light weight metadata file with its own timeline, 
-but is compatible with DASH timed metadata and event processing model.
-In the figure below we illustrate the structure of the DashEvent compatible timed metadata track formatting.
-
-Figure 5 shows the formatting of the timed metadata track.
-<figure class="figure">
-  <img src="Images/timedMetadataTrack.png" />
-  <figcaption class="figure"> structure of recommended DashEvent compatible timed metadata track
-</figcaption></figure>
-
-Note that some fragments may contain multiple samples with one or more embedded DASHEventMessageBox, whilst others might be empty or contain a single sample embedding a single DASHEventMessageBox. In case  of no event nor sample, empty ISOBMFF samples, which are samples with a duration but no bytesize, may be used to fill the timeline as to avoid gaps in the timeline of the timed metadata track.
-
-The ISOBMFF and file format parser can parse the samples and pass them to the Event and Timed Metadata Buffer as desribed.
-
 # Events and timed metadata sample dispatch timing modes # {#event-metadata-dispatch}
 
-This figure shows two possible dispatch timing models for DASH events and timed metadata samples.
+Figure 5 shows two possible dispatch timing models for DASH events and timed metadata samples.
 <figure class="figure">
   <img src="Images/eventtimedmetadatadispatchmodes.png" />
   <figcaption class="figure">The Application events and timed metadata dispatch modes
@@ -1046,7 +990,7 @@ The description of the API below is strictly functional, i.e. implementation-agn
 As part of this API and prior to any operations, DASH Player provides a list of <var>scheme_id</var>/(<var>value</var>) listed in MPD when it receives it. This list includes all events as well as <var>scheme_id</var> of all timed metadata tracks.  At this point Application is aware of the possible events and metadata delivered by DASH Player.
 
 
-The subscription state diagram of DASH Player associated with the API is shown below in Figure 7:
+The subscription state diagram of DASH Player associated with the API is shown below in Figure 6:
 <figure class="figure">
   <img src="Images/eventsubscriptionstatediagram.png" />
   <figcaption class="figure">State Diagram of DASH Player for the event/timed metadata API.
@@ -1186,43 +1130,3 @@ called with the following arguments:
   - <var>callback_function</var>
 
 If a specific listener is given in the <var>callback_function</var> argument, then only that listener is removed for the specified <var>scheme_uri</var>/(<var>value</var>). Omitting or passing null to the <var>callback_function</var> argument would remove all event listeners for the specified <var>scheme_uri</var>/(<var>value</var>).
-
-
-# Externally defined terms # {#external-terms}
-
-<dfn element>SegmentBase</dfn>
-<dl dfn-type="element-attr" dfn-for="SegmentBase">
-<dfn>timescale</dfn>
-<dfn>presentationtimeoffset</dfn>
-<dfn>presentation time offset</dfn>
-
-</dl> 
-<dfn>time scale</dfn>
-<dfn>Presentation Time Offset</dfn>
-<dfn>cmaf</dfn>
-
-<!-- Document metadata follows. The below sections are used by the document compiler and are not directly visible. -->
-
-<pre class="metadata">
-Revision: 5.0
-
-Title:  DASH Player's Application Events and Timed Metadata Processing Models and APIs (Community Review)
-Status: LD
-Shortname: application events
-URL: https://dashif.org/guidelines/Events-CR-v1.pdf
-Issue Tracking: GitHub https://github.com/Dash-Industry-Forum/Events/issues
-Repository: https://github.com/Dash-Industry-Forum/Event GitHub
-Editor: DASH Industry Forum
-
-Default Highlight: text
-<!-- Enabling line numbers breaks code blocks in PDF! (2018-10-02) -->
-Line Numbers: off
-Markup Shorthands: markdown yes
-Boilerplate: copyright off, abstract off
-Abstract: None
-</pre>
-
-
-<pre boilerplate="logo">
-<a href="https://dashif.org/"><img src="Images/DASH-IF.png" /></a>
-</pre>
