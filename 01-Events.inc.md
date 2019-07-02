@@ -891,8 +891,9 @@ In this document, we use the following common variable names instead of some of 
 Note: (Editor's note) This clause was recently added to this document and in-depth review is requested from reviwers. 
 
 Timed metadata tracks are a useful and lightweight structure for carrying information related to a media presentation.
-
 However, some drawbacks of such a simple ISOBMFF timed metadata track are that:
+
+
 - <var>value</var>=<b> value in DashEventMessageBox</b> is not present to signal sub-schemes  
 - <var>id</var>=<b> id used in DashEventMessageBox </b> is not used, so processing cannot detect duplicate metadata samples 
 - multiple samples at the same time are not allowed, due to ISOBMFF constraints (duration 0 is not allowed, two samples with same presentation time in track is not allowed), while MPD and inband events may have concurrent instances.
@@ -920,8 +921,7 @@ A timed metadata track structured this way has the following benefits:
 - overlapping events may exist
 - multiple schemeIdUri per metadata track may exist 
 
-This format maintains the advantage of timed metadata track, which is having a separate light weight metadata file with its own timeline. 
-Also, it is fully compatible with DASH timed metadata and event processing model.
+This format maintains the advantage of timed metadata track, which is having a separate light weight metadata file with its own timeline. Also, it is fully compatible with DASH timed metadata and event processing model.
 In the figure below we illustrate the structure of track formatting, in case a fragmented MP4 metadata track is used.
 
 This figure shows the formatting of the timed metadata track.
