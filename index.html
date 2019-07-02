@@ -34,7 +34,7 @@
     Introduction
     ------------
     <p>The API's defined in this document are partial interfaces with respect to the <code>DASHEVent</code> event target.  
-    It is meant to cover both in-band ('emsg') and MPD-carriage of events.</p>
+    It is meant to cover both in-band ('emsg') and MPD-carriage of events, as well as sparsed timed metadata tracks.</p>
     
     <h2>DASHEvent Interface</h2>
           <pre class="idl">
@@ -71,11 +71,10 @@ interface DASHEvent : EventTarget {
           <pre class="idl">
 interface EventData {
     readonly        attribute DOMString                 schemeIdURI;
-    readonly        attribute DOMString                 value;
-    readonly        attribute int?                      timescale;  
+    readonly        attribute DOMString                 value;  
     readonly        attribute DOMTimeStamp?             presentationTime;   
-    readonly        attribute int?                      duration;   
-    readonly        attribute int?                      id; 
+    readonly        attribute unsigned long?            duration;   
+    readonly        attribute unsigned long?            id; 
     readonly        attribute ByteString                messageData; 
 };
 </pre>
@@ -92,15 +91,7 @@ interface EventData {
                 <p>The <code>value</code></dfn> attribute
                 MUST return the value for the event stream element. The value semantics are 
                 defined by the owners of the scheme identified in the <code>schemeIdUri</code> attribute.</p>
-              </dd>              
-              <dt><code>timescale</code> of type <span class=
-              "idlAttrType"><a>int</a></span>, readonly</dt>
-              <dd>
-                <p>The <code>timescale</code></dfn> attribute
-                MUST return the timescale in units per second to be used for the derivation of different real-time 
-                duration values in the <code>EventData</code> elements.
-                If not present, it shall be set to 1.</p>
-              </dd>                 
+              </dd>                        
               <dt><code>presentationTime</code> of type <span class=
               "idlAttrType"><a>DOMTimeStamp</a></span>, readonly</dt>
               <dd>
@@ -115,10 +106,9 @@ interface EventData {
                 <p>The <code>duration</code></dfn> attribute
                 MUST return the time for which
                 the event is in effect starting from presentationTime.
-                The value of the duration in seconds is the division of the value of this attribute and 
-                the value of the <code>timescale</code> attribute.
+                The value of the duration is in milliseconds.
                 If this attribute is not present then its value must be
-                set to NULL and the event
+                set to the maximum value (4294967295) and the event
                 MUST be persisted until another DASH event is received.</p>
               </dd>   
               <dt><code>id</code> of type <span class=
@@ -130,7 +120,7 @@ interface EventData {
                 be set to NULL.</p>
               </dd>           
               <dt><code>messageData</code> of type <span class=
-              "idlAttrType"><a>DOMString</a></span>, readonly</dt>
+              "idlAttrType"><a>ByteString</a></span>, readonly</dt>
               <dd>
                 <p>The <code>messageData</code></dfn> attribute
                 MUST return the event message data payload.</p>
@@ -139,16 +129,30 @@ interface EventData {
 <h2>EventList Interface</h2> 
           <pre class="idl">
 dictionary EventList {
-    DOMString[]     desiredSchemeIdURI;
+    DOMString[]             desiredSchemeIdURI;
+    optional DOMString[]    value;
+    optional boolean[]      dispatchMode;
 };
 </pre>
 <p>
-<code>EventList</code> contains one or more valid event scheme URI's.
+<code>EventList</code> contains one or more valid event scheme URI's along with associated parameters.  
 </p>
 <h3>Members</h3>
 <dt><code>desiredSchemeIdURI</code>  of type <span class=
               "idlAttrType"><a>DOMString[]</a></span></dt>
-<dd><code>desiredSchemeIdURI</code> is an array of valid DASH event scheme URI's.</dd>
+<dd><code>desiredSchemeIdURI</code> is an array of valid DASH event scheme URI's. If the <code>desiredSchemeURI</code> array is set to NULL, then all events will be sent to the handler.</dd>
+<dt><code>value</code>  of type <span class=
+              "idlAttrType"><a>DOMString[]</a></span></dt>
+<dd><code>value</code> is an array of valid values for events. If the <code>value</code> array has only one member, then that value will be applied to all scheme URI's.  If more than one member is present in the array
+then those values will be matched to each member in <code>desiredSchemeIdURI</code> in order.  A <code>value</code> array with more members than the <code>desiredSchemeIdURI</code> array should be rejected if the 
+<code>desiredSchemeIdURI</code> array is non-NULL.  In the case of a non-NULL <code>desiredSchemeIdURI</code> array, members of the <code>value</code> array can be set to NULL if all values are acceptable for the associated Scheme URI.  If the <code>desiredSchemeIdURI</code> array is NULL, then the <code>value</code> array can have only one member.</dd>
+<dt><code>dispatchMode</code>  of type <span class=
+              "idlAttrType"><a>boolean[]</a></span></dt>
+<dd><code>dispathMode</code> is an array of dispatch mode settings for events (true indicating a dispatch on receipt of the event, false representing a dispatch on the start of the event) . If the <code>dispatchMode</code> array has only one member, then that dispatch mode will be applied to all scheme URI's.  If more than one member is present in the array
+then those values will be matched to each member in <code>desiredSchemeIdURI</code> in order.
+A <code>dispatchMode</code> array with more members than the <code>desiredSchemeIdURI</code> array should be rejected if the 
+<code>desiredSchemeIdURI</code> array is non-NULL.  In the case of a non-NULL <code>desiredSchemeIdURI</code> array, members of the <code>dispatchMode</code> array can be set to NULL if both dispatch modes are acceptable for the associated Scheme URI.
+If the <code>desiredSchemeIdURI</code> array is NULL, then the <code>dispatchMode</code> array can have only one member.</dd>
 
 <h2>Example</h2>
 <pre class='example'>
