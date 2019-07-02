@@ -837,10 +837,10 @@ As is shown in Figure 3, each MPD Event has three associated timing
 parameters along the media timeline:
 
 1.  The PeriodStart Time (<var>AT</var>) of the Period element containing the EventStream element.
-a
 - <var>message_data</var> = decode64([=Event@messageData=])
 
 In which decode64() function is:
+
 <figure class="equation">
 
   $$decode64(x) = \begin{cases}
