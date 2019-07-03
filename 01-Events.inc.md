@@ -890,7 +890,7 @@ In this document, we use the following common variable names instead of some of 
 
 Note: (Editor's note) This clause was recently added to this document and in-depth review is requested from reviwers. 
 
-Timed metadata tracks are a useful and lightweight structure for carrying information related to a media presentation.
+Timed metadata tracks are a lightweight structure for carrying information related to a media presentation.
 However, some drawbacks of such a simple ISOBMFF timed metadata track are that:
 
 
@@ -907,9 +907,9 @@ Therefore, a DASH Event compatible timed metadata track that solves these drawba
 - It shall signal urn:dashif:embeddedevents:2019 in the URIMetaSampleEntry (scheme_id) to signal a timed metadata track carrying DASH Event Message Boxes 
 - Each ISOBMFF sample may contain one or more DashEventMessageBoxes (in the mdat box), with the presentation time of the ISOBMFF sample and DashEventMessageBox equal to each other
 -  Each ISOBMFF sample shall contain one DashEventMessageBox, if a single event/timed metadata occurs at that presentation time corresponding to the ISOBMFF sample 
-- Each ISOBMFF sample shall multiple DashEventMessageBox if multiple events start at that presentation time corresponding to the ISOBMFF sample
-- the DashEventMessageBox schemeIdUri may be used to signal the scheme_id of the current event/metadata 
-- The message_data of the DashEventMessageBox shall contain the payload, that would normally be carried in the timed metadata sample directly
+- Each ISOBMFF sample shall contain multiple DashEventMessageBox if multiple events start at that presentation time corresponding to the ISOBMFF sample
+- the DashEventMessageBox schemeIdUri shall be used to signal the scheme_id of the current event/metadata 
+- The message_data field of the DashEventMessageBox shall contain the payload, that would normally be carried in the timed metadata sample directly
 - the value and id fields shall be used consistently as similar to when using inband events, i.e. with the same meaning to detect duplicates and signal sub schemes
 - the timescale should be equal to the timescale in the MediaHeader mdhd
 - The DashEventMessageBox duration should be equal to the ISOBMFF sample duration, however, when a new event/metadata is occuring before the current is over, the DashEventMessageBox signals the actual duration, while the ISOBMFF sample duration signals the difference in presentation time of the current and next occuring event/metadata. This makes it possible to store overlapping metadata/events, without overlaps in the timeline of the ISOBMFF track. 
@@ -924,15 +924,15 @@ A timed metadata track structured this way has the following benefits:
 This format maintains the advantage of timed metadata track, which is having a separate light weight metadata file with its own timeline. Also, it is fully compatible with DASH timed metadata and event processing model.
 In the figure below we illustrate the structure of track formatting, in case a fragmented MP4 metadata track is used.
 
-This figure shows the formatting of the timed metadata track.
+This figure shows the formatting of the timed metadata track, in case of a fragmented structure.
 <figure class="figure">
   <img src="Images/timedMetadataTrack.png" />
   <figcaption class="figure"> structure of DashEvent embedded timed metadata track
 </figcaption></figure>
 
-Note that some fragments may contain multiple samples with one or more embedded DASHEventMessageBox, whilst others might be empty or contain a single sample embedding a single DASHEventMessageBox. In case  of no event nor sample, empty ISOBMFF samples, which are samples with a duration but no bytesize, may be used to fill the timeline as to avoid gaps in the timeline of the timed metadata track.
+Note that some fragments may contain multiple samples with one or more embedded DASHEventMessageBox, while others might be empty or contain a single sample embedding a single DASHEventMessageBox. In case  of no event nor sample, empty ISOBMFF samples, which are samples with a duration but no bytesize, may be used to fill the timeline as to avoid gaps in the timeline of the timed metadata track.
 
-The ISOBMFF and file format parser can parse the samples and pass them to the Event and Timed Metadata Buffer as described.
+The ISOBMFF and file format parser can parse the samples and pass them to the Event and Timed Metadata Buffer.
 
 
 # Events and timed metadata sample dispatch timing modes # {#event-metadata-dispatch}
