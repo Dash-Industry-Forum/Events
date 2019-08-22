@@ -837,44 +837,10 @@ As is shown in Figure 3, each MPD Event has three associated timing
 parameters along the media timeline:
 
 1.  The PeriodStart Time (<var>AT</var>) of the Period element containing the EventStream element.
-
-2.  Event Start Time (<var>ST</var>): the moment in the media timeline that a given MPD Event
-    becomes active and can be calculated from the attribute [=Event@presentationTime=].
-
-3.  Event duration (<var>DU</var>): the duration for which the event is active that
-    can be calculated from the attribute [=Event@duration=].
-
-Note that the first parameter is inherited from the Period containing
-the Events and only the 2<sup>nd</sup> and 3<sup>rd</sup> parameters are explicitly included in the <{Event}> element. Each <{EventStream}> also has [=EventStream@timescale=] to scale the above parameters.
-
-Figure 3 demonstrates these parameters in the media timeline.
-<figure class="figure">
-  <img src="Images/mpdeventtiming.png" />
-  <figcaption class="figure">MPD events timing model
-</figcaption></figure>
-
-
-The <var>ST</var> of an MPD event can be
-calculated using values in its <{EventStream}> and <{Event}> elements:
-
-<figure class="equation">
-
-  $$ST = PeriodStart +  
-  \frac{EventStream@presentationTimeOffset}{EventStream@timescale} + 
-  \frac{Event@presentationTime}{EventStream@timescale}$$
-  <figcaption class="equation">Event Start Time of MPD event
-</figcaption></figure>
-
-In this document, we use the following common variable names instead of some of above variables to harmonize parameters between Inband events, MPD events, and timed metadata samples:
-
-- <var>scheme_id</var> = [=EventStream@schemeIdUri=]
-- <var>value</var> = [=EventStream@value=]
-- <var>presentation_time</var> = <var>ST</var>
-- <var>duration</var> = [=Event@duration=]/[=EventStream@timescale=]
-- <var>id</var> = [=Event@id=]
-- <var>message_data</var> = decode64([=Event@messageData=])
+      -  <var>message_data</var> = decode64([=Event@messageData=])
 
 In which decode64() function is:
+
 <figure class="equation">
 
   $$decode64(x) = \begin{cases}
@@ -924,49 +890,49 @@ In this document, we use the following common variable names instead of some of 
 
 Note: (Editor's note) This clause was recently added to this document and in-depth review is requested from reviwers. 
 
-Compared to MPD and inband events, which are interleaved with the media for inband events or embedded in MPD, the timed metadata track is a structure for storing timed metadata separately, self contained, in an ISOBMFF formatted file. 
-
+Timed metadata tracks are a lightweight structure for carrying information related to a media presentation.
 However, some drawbacks of such a simple ISOBMFF timed metadata track are that:
-- <var>value</var>=<b> value in DashEventMessageBox</b> is not present to signal sub-schemes 
+
+
+- <var>value</var>=<b> value in DashEventMessageBox</b> is not present to signal sub-schemes  
 - <var>id</var>=<b> id used in DashEventMessageBox </b> is not used, so processing cannot detect duplicate metadata samples 
-- multiple samples at the same time are not allowed, due to ISOBMFF constraints (duration 0 is not allowed, two samples with same presentation time in track is not allowd) while MPD and inband events may have concurrent instances.
+- multiple samples at the same time are not allowed, due to ISOBMFF constraints (duration 0 is not allowed, two samples with same presentation time in track is not allowed), while MPD and inband events may have concurrent instances.
 - restricting the track to one scheme per timed metadata track is restrictive, while in a single MPD or a single Represenation multiple MPD/inband event schemes can be used
 - the parameters <var>value</var> and <var>id</var> are not available and cannot be passed to the API 
 - a new timed metadata occuring before the end of prior sample duration is not allowed while overlapping events, however, is possible with MPD and inband events  
 
-Therefore, a DASH Event compatible timed metadata track that solves these drawbacks is defined and recommended. The DASH Event compatible timed metadata track is formatted as follows:  
+Therefore, a DASH Event compatible timed metadata track that solves these drawbacks is defined and recommended. The DASH Event compatible timed metadata track, a metadata track with embbeded event message boxes is formatted as follows:  
 
 - It shall embed the DashEventMessageBox in ISOBMFF samples to encapsulate the timed metadata. 
 - It shall signal urn:dashif:embeddedevents:2019 in the URIMetaSampleEntry (scheme_id) to signal a timed metadata track carrying DASH Event Message Boxes 
-- Each ISOBMFF sample may contain one or more DASH Event Message Boxes (in the mdat box), with the presentation time of the ISOBMFF sample and DashEventMessageBox equal to each other
+- Each ISOBMFF sample may contain one or more DashEventMessageBoxes (in the mdat box), with the presentation time of the ISOBMFF sample and DashEventMessageBox equal to each other
 -  Each ISOBMFF sample shall contain one DashEventMessageBox, if a single event/timed metadata occurs at that presentation time corresponding to the ISOBMFF sample 
-- Each ISOBMFF sample shall multiple DashEventMessageBox if multiple events start at that presentation time corresponding to the ISOBMFF sample
-- the DashEventMessageBox schemeIdUri may be used to signal the scheme_id of the current event/metadata 
-- The message_data of the DashEventMessageBox shall contain the payload, that would normally be carried in the timed metadata sample directly, or in message_data 
-- the value and id fields shall be used consistently as when using inband events, i.e. with the same meaning to detect duplicates and signal sub schemes
+- Each ISOBMFF sample shall contain multiple DashEventMessageBox if multiple events start at that presentation time corresponding to the ISOBMFF sample
+- the DashEventMessageBox schemeIdUri shall be used to signal the scheme_id of the current event/metadata 
+- The message_data field of the DashEventMessageBox shall contain the payload, that would normally be carried in the timed metadata sample directly
+- the value and id fields shall be used consistently as similar to when using inband events, i.e. with the same meaning to detect duplicates and signal sub schemes
 - the timescale should be equal to the timescale in the MediaHeader mdhd
-- The DashEventMessageBox duration should be equal to the ISOBMFF duration of the timed metadata sample , however, when an new event/metadata sample is occuring before the current is over, the DashEventMessageBox signals the actual duration, while the ISOBMFF signals the difference in presentation time of the current and next occuring event/metadata sample. This makes it possible to store overlapping metadata/events, without overlapping timeline in the ISOBMFF track. 
+- The DashEventMessageBox duration should be equal to the ISOBMFF sample duration, however, when a new event/metadata is occuring before the current is over, the DashEventMessageBox signals the actual duration, while the ISOBMFF sample duration signals the difference in presentation time of the current and next occuring event/metadata. This makes it possible to store overlapping metadata/events, without overlaps in the timeline of the ISOBMFF track. 
 
-A timed metadata track structured this way has the following benifits: 
+A timed metadata track structured this way has the following benefits: 
 
-- allow the client processing model to use the <var>value</var> and <var>id</var> for passing to client and detecting duplicates 
-- multiple samples/events with the same presentation time may exist, i.e. by embedding multiple DashEventMessageBoxes in one ISOBMFF sample
-- overlapping events/samples may exist
+- Allow the client processing model to use the <var>value</var> and <var>id</var> for passing to client and detecting duplicates 
+- multiple events with the same presentation time may exist, i.e. by embedding multiple DashEventMessageBoxes in one ISOBMFF sample
+- overlapping events may exist
 - multiple schemeIdUri per metadata track may exist 
 
-This format maintains the advantage of timed metadata track, which is having a separated light weight metadata file with its own timeline, 
-but is compatible with DASH timed metadata and event processing model.
-In the figure below we illustrate the structure of the DashEvent compatible timed metadata track formatting.
+This format maintains the advantage of timed metadata track, which is having a separate light weight metadata file with its own timeline. Also, it is fully compatible with DASH timed metadata and event processing model.
+In the figure below we illustrate the structure of track formatting, in case a fragmented MP4 metadata track is used.
 
-This figure shows the formatting of the timed metadata track.
+This figure shows the formatting of the timed metadata track, in case of a fragmented structure.
 <figure class="figure">
   <img src="Images/timedMetadataTrack.png" />
-  <figcaption class="figure"> structure of recommended DashEvent compatible timed metadata track
+  <figcaption class="figure"> structure of DashEvent embedded timed metadata track
 </figcaption></figure>
 
-Note that some fragments may contain multiple samples with one or more embedded DASHEventMessageBox, whilst others might be empty or contain a single sample embedding a single DASHEventMessageBox. In case  of no event nor sample, empty ISOBMFF samples, which are samples with a duration but no bytesize, may be used to fill the timeline as to avoid gaps in the timeline of the timed metadata track.
+Note that some fragments may contain multiple samples with one or more embedded DASHEventMessageBox, while others might be empty or contain a single sample embedding a single DASHEventMessageBox. In case  of no event nor sample, empty ISOBMFF samples, which are samples with a duration but no bytesize, may be used to fill the timeline as to avoid gaps in the timeline of the timed metadata track.
 
-The ISOBMFF and file format parser can parse the samples and pass them to the Event and Timed Metadata Buffer as desribed.
+The ISOBMFF and file format parser can parse the samples and pass them to the Event and Timed Metadata Buffer.
 
 
 # Events and timed metadata sample dispatch timing modes # {#event-metadata-dispatch}

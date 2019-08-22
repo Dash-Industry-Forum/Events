@@ -2,15 +2,19 @@
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en'>
   <head>
     <meta charset='utf-8'/>
-    <title>DASH Event API</title>
+    <title>DASH Event Metadata API</title>
     <script class='remove'>
       var respecConfig = {
           specStatus: "ED"
       ,   shortName:  "event-api"
       ,   editors: [
          {   name:       "Giridhar Mandyam"
-                ,   company:    "Qualcomm Technologies Inc"
-                ,   companyURL: "http://www.qualcomm.com/" }]
+                ,   company:    "Qualcomm Technologies Inc."
+                ,   companyURL: "http://www.qualcomm.com/" },
+         {   name:       "Paul Higgs"
+                ,   company:    "Huawei Inc."
+                ,   companyURL: "http://www.huawei.com/" }                
+                ]
       ,   noIDLIn:      true
       ,   isRecTrack:   false
       ,   isNoTrack:    true
@@ -24,34 +28,27 @@
     
     <section id='abstract'>
       This document specifies an API that a user agent or DASH client can expose for application access to DASH events.
+      This builds upon <a href='https://www.w3.org/TR/media-source/'>Media Source Extensions</a>.
     </section>
     
     Introduction
     ------------
-    <p>The API's defined in this document are partial interfaces with respect to the <code>DASHEVent</code> event target.  It is meant to cover both in-band ('emsg') and MPD-carriage of events.</p>
+    <p>The API's defined in this document are partial interfaces with respect to the <code>DASHEVent</code> event target.  
+    It is meant to cover both in-band ('emsg') and MPD-carriage of events, as well as sparsed timed metadata tracks.</p>
     
-    DASHEvent Interface
-    --------------
+    <h2>DASHEvent Interface</h2>
           <pre class="idl">
+[Constructor(SourceBuffer source)]
 interface DASHEvent : EventTarget {
-    readonly        attribute DOMString             type;
-    readonly        attribute DOMString             eventData;
+    readonly        attribute EventData             eventData;
                     attribute EventHandler          ondashevent;
+    Promise         setEvents(Eventlist eventList);     
 };</pre>
             <h3>Attributes</h3>
-            <dl data-link-for="DASHEvent" data-dfn-for=
-            "MediaStreamTrack" class="attributes">
-              <dt><code>kind</code> of type <span class=
-              "idlAttrType"><a>DOMString</a></span>, readonly</dt>
-              <dd>
-                <p>The <code>kind</code></dfn> attribute
-                MUST return the string "<code>in-band</code>" if this current event is an 'emsg'-carried event, otherwise it should
-                return "<code>out-of-band</code>" to represent an MPD-carried event.</p>
-              </dd>
               <dt><code>eventData</code> of type <span class=
-              "idlAttrType"><a>DOMString</a></span>, readonly</dt>
+              "idlAttrType"><a>EventData</a></span>, readonly</dt>
               <dd>
-                <p>When an event is ncountered, the
+                <p>When an event is encountered, the
                 DASH client MUST extract the event data, and MUST
                 initialize the object's <code>eventData</a></code> attribute to a string
                 representation of the event data.</p>
@@ -61,3 +58,141 @@ interface DASHEvent : EventTarget {
               <dd>
                 <p>This event handler is invoked when a new DASH event arrives.</p>
               </dd>
+              <dt>
+              <code>setEvents()</code> of type <span class=
+              "idlAttrType"><a>Promise</a></span></dt>
+              <dd>
+              <p>This promise must include an <code>eventList</code> argument that
+              enumerates all events in which the application is interested.</p>
+              </dd>  
+
+
+    <h2>EventData Interface</h2>
+          <pre class="idl">
+interface EventData {
+    readonly        attribute DOMString                 schemeIdURI;
+    readonly        attribute DOMString                 value;  
+    readonly        attribute DOMTimeStamp?             presentationTime;   
+    readonly        attribute unsigned long?            duration;   
+    readonly        attribute unsigned long?            id; 
+    readonly        attribute ByteString                messageData; 
+};
+</pre>
+            <h3>Attributes</h3>              
+              <dt><code>schemeIdURI</code> of type <span class=
+              "idlAttrType"><a>DOMString</a></span>, readonly</dt>
+              <dd>
+                <p>The <code>schemeIDURI</code></dfn> attribute
+                MUST return a URI that identifies the DASH event scheme.</p>
+              </dd>
+              <dt><code>value</code> of type <span class=
+              "idlAttrType"><a>DOMString</a></span>, readonly</dt>
+              <dd>
+                <p>The <code>value</code></dfn> attribute
+                MUST return the value for the event stream element. The value semantics are 
+                defined by the owners of the scheme identified in the <code>schemeIdUri</code> attribute.</p>
+              </dd>                        
+              <dt><code>presentationTime</code> of type <span class=
+              "idlAttrType"><a>DOMTimeStamp</a></span>, readonly</dt>
+              <dd>
+                <p>The <code>presentationTime</code></dfn> attribute
+                MUST return a value corresponding to the exact moment in the media presentation timeline that the event becomes active.
+                If this attribute is not present 
+                then its value shall be set to NULL and the event is assumed to be active immediately.</p>
+              </dd>
+              <dt><code>duration</code> of type <span class=
+              "idlAttrType"><a>int</a></span>, readonly</dt>
+              <dd>
+                <p>The <code>duration</code></dfn> attribute
+                MUST return the time for which
+                the event is in effect starting from presentationTime.
+                The value of the duration is in milliseconds.
+                If this attribute is not present then its value must be
+                set to the maximum value (4294967295) and the event
+                MUST be persisted until another DASH event is received.</p>
+              </dd>   
+              <dt><code>id</code> of type <span class=
+              "idlAttrType"><a>int</a></span>, readonly</dt>
+              <dd>
+                <p>The <code>id</code></dfn> attribute
+                MUST return an identifying value for
+                this event.  If this value is not present then its value must
+                be set to NULL.</p>
+              </dd>           
+              <dt><code>messageData</code> of type <span class=
+              "idlAttrType"><a>ByteString</a></span>, readonly</dt>
+              <dd>
+                <p>The <code>messageData</code></dfn> attribute
+                MUST return the event message data payload.</p>
+              </dd>
+              
+<h2>EventList Interface</h2> 
+          <pre class="idl">
+dictionary EventList {
+    DOMString[]             desiredSchemeIdURI;
+    optional DOMString[]    value;
+    optional boolean[]      dispatchMode;
+};
+</pre>
+<p>
+<code>EventList</code> contains one or more valid event scheme URI's along with associated parameters.  
+</p>
+<h3>Members</h3>
+<dt><code>desiredSchemeIdURI</code>  of type <span class=
+              "idlAttrType"><a>DOMString[]</a></span></dt>
+<dd><code>desiredSchemeIdURI</code> is an array of valid DASH event scheme URI's. If the <code>desiredSchemeURI</code> array is set to NULL, then all events will be sent to the handler.</dd>
+<dt><code>value</code>  of type <span class=
+              "idlAttrType"><a>DOMString[]</a></span></dt>
+<dd><code>value</code> is an array of valid values for events. If the <code>value</code> array has only one member, then that value will be applied to all scheme URI's.  If more than one member is present in the array
+then those values will be matched to each member in <code>desiredSchemeIdURI</code> in order.  A <code>value</code> array with more members than the <code>desiredSchemeIdURI</code> array should be rejected if the 
+<code>desiredSchemeIdURI</code> array is non-NULL.  In the case of a non-NULL <code>desiredSchemeIdURI</code> array, members of the <code>value</code> array can be set to NULL if all values are acceptable for the associated Scheme URI.  If the <code>desiredSchemeIdURI</code> array is NULL, then the <code>value</code> array can have only one member.</dd>
+<dt><code>dispatchMode</code>  of type <span class=
+              "idlAttrType"><a>boolean[]</a></span></dt>
+<dd><code>dispathMode</code> is an array of dispatch mode settings for events (true indicating a dispatch on receipt of the event, false representing a dispatch on the start of the event) . If the <code>dispatchMode</code> array has only one member, then that dispatch mode will be applied to all scheme URI's.  If more than one member is present in the array
+then those values will be matched to each member in <code>desiredSchemeIdURI</code> in order.
+A <code>dispatchMode</code> array with more members than the <code>desiredSchemeIdURI</code> array should be rejected if the 
+<code>desiredSchemeIdURI</code> array is non-NULL.  In the case of a non-NULL <code>desiredSchemeIdURI</code> array, members of the <code>dispatchMode</code> array can be set to NULL if both dispatch modes are acceptable for the associated Scheme URI.
+If the <code>desiredSchemeIdURI</code> array is NULL, then the <code>dispatchMode</code> array can have only one member.</dd>
+
+<h2>Example</h2>
+<pre class='example'>
+&lthtml&gt
+&ltbody&gt
+
+&ltscript&gt
+  function onSourceOpen(videoTag, e) {
+    var mediaSource = e.target;
+    if (mediaSource.sourceBuffers.length > 0)
+        return;
+    try {
+        dashevent = new DashEvent(mediaSource);
+        dashevent.setEvents(["schemeURI1","schemeURI2"]).then(
+            {
+            console.log('Desired event list set');
+            }
+        }
+        catche (e)
+            {
+            console.error('Failed to create Dash event handler due to:  ' + e);
+            return;
+            }
+    dashevent.ondashevent = dashEventHandler;
+    function dashEventHandler(event){
+        }
+    }
+&lt/script&gt
+
+
+&ltvideo id="v" autoplay&gt &lt/video&gt
+
+
+&ltscript&gt
+  var video = document.getElementById('v');
+  var mediaSource = new MediaSource();
+  mediaSource.addEventListener('sourceopen', onSourceOpen.bind(this, video));
+  video.src = window.URL.createObjectURL(mediaSource);
+&lt/script&gt
+
+&lt/body&gt
+&lt/html&gt
+</pre>
