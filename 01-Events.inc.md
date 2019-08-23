@@ -1153,3 +1153,104 @@ called with the following arguments:
   - <var>callback_function</var>
 
 If a specific listener is given in the <var>callback_function</var> argument, then only that listener is removed for the specified <var>scheme_uri</var>/(<var>value</var>). Omitting or passing null to the <var>callback_function</var> argument would remove all event listeners for the specified <var>scheme_uri</var>/(<var>value</var>).
+# Detailed processing # {#detailed-processing}
+As shown in Figure 1, the event/metadata buffer holds the events or metadata samples to be processed. We assume that this buffer have same data structure to hold events or metadata. We use Table 3 to define this Event/Metadata Internal Object (EMIO):
+
+schemeidUri, value, presentation_time, duration, id, messageData.
+
+<figure class="table">
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 bgcolor="#DDDDDD"
+ style='border-collapse:collapse;border:none'>
+ <tr>
+  <td width=623 valign=top style='width:600pt;border:solid #4472C4 2.25pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+<table>
+<tr>
+ <td colspan="4">event-metadata-internal-object {</td>
+</tr>
+
+<td></td>
+<td></td>
+<td>string</td>
+<td>scheme_id_uri;</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>string</td>
+<td>value;</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>unsigned int(32)</td>
+<td>presentation_time;</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td>unsigned int(32)</td>
+<td>duration;</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>unsigned int(32)</td>
+<td>id;</td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="2">unsigned int(8)</td>
+<td>message_data();</td>
+</tr>
+<tr class="odd">
+<td colspan="4">}</td>
+</tr>
+</tbody>
+</table>
+ <p class=MsoNormal></p>
+  </td>
+ </tr>
+</table>
+<figcaption class="table">The Event/Metadata Internal Object (EMIO)</figcaption>
+</figure>
+
+
+The process for converting the received event/metadata sample to EMIO is as following:
+
+1. For MPD event
+    * For each period:
+      * Parse each EventStream
+        * Get Eventstream common parameters
+        * For each Event Stream:Parse each event
+          * For each event
+            * calculate presentation time and event duration
+            * add it to EMIO
+1. For inband event
+    * For each Segment
+      * Parse event boxes as well as moof
+      * calculate EPT of segment
+      * For each event:
+        * map emsg box parameters to EMIO
+1. For simple metadata samples
+    * For each Segment
+      * Parse moof
+      * For each sample:
+        * Parse the formant
+        * map the data to EMIO
+1. For embedded emtadata samples
+    * For each Segment
+      * For each metadata sample
+        * calculate timing
+        * For each emsg
+          * calculate timing
+          * map it to EMIO
+
+Note the constraints in embedded metadata tracks:
+1. event start time is equal the sample presentation time, therefore the values of presentation_time and presentation_time_delta shall be ignored.
+2. if a sample contains more than one esmg box, their duration are equal (and equal to sample duration). 
+3. we don't have the signaling if an event is the continiuation of previous event. repeated emsg 
+ 
+
+
+
