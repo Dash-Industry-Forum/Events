@@ -931,54 +931,6 @@ In this document, we use the following variable names instead of some of above v
 - <var>duration</var> = <dfn>timed metadata sample duration</dfn>/<var>timescale</var>
 - <var>message_data</var> = <dfn>timed metadata sample data in mdat</dfn>
 
-# Timed metadata tracks with embedded event message boxes  # {#embedded-metadata-track}
-
-Note: (Editor's note) This clause was recently added to this document and in-depth review is requested from reviwers. 
-
-Timed metadata tracks are a lightweight structure for carrying information related to a media presentation.
-However, some drawbacks of such a simple ISOBMFF timed metadata track are that:
-
-
-- <var>value</var>=<b> value in DashEventMessageBox</b> is not present to signal sub-schemes  
-- <var>id</var>=<b> id used in DashEventMessageBox </b> is not used, so processing cannot detect duplicate metadata samples 
-- multiple samples at the same time are not allowed, due to ISOBMFF constraints (duration 0 is not allowed, two samples with same presentation time in track is not allowed), while MPD and inband events may have concurrent instances.
-- restricting the track to one scheme per timed metadata track is restrictive, while in a single MPD or a single Represenation multiple MPD/inband event schemes can be used
-- the parameters <var>value</var> and <var>id</var> are not available and cannot be passed to the API 
-- a new timed metadata occuring before the end of prior sample duration is not allowed while overlapping events, however, is possible with MPD and inband events  
-
-Therefore, a DASH Event compatible timed metadata track that solves these drawbacks is defined and recommended. The DASH Event compatible timed metadata track, a metadata track with embbeded event message boxes is formatted as follows:  
-
-- It shall embed the DashEventMessageBox in ISOBMFF samples to encapsulate the timed metadata. 
-- It shall signal urn:dashif:embeddedevents:2019 in the URIMetaSampleEntry (scheme_id) to signal a timed metadata track carrying DASH Event Message Boxes 
-- Each ISOBMFF sample may contain one or more DashEventMessageBoxes (in the mdat box), with the presentation time of the ISOBMFF sample and DashEventMessageBox equal to each other
--  Each ISOBMFF sample shall contain one DashEventMessageBox, if a single event/timed metadata occurs at that presentation time corresponding to the ISOBMFF sample 
-- Each ISOBMFF sample shall contain multiple DashEventMessageBox if multiple events start at that presentation time corresponding to the ISOBMFF sample
-- the DashEventMessageBox schemeIdUri shall be used to signal the scheme_id of the current event/metadata 
-- The message_data field of the DashEventMessageBox shall contain the payload, that would normally be carried in the timed metadata sample directly
-- the value and id fields shall be used consistently as similar to when using inband events, i.e. with the same meaning to detect duplicates and signal sub schemes
-- the timescale should be equal to the timescale in the MediaHeader mdhd
-- The DashEventMessageBox duration should be equal to the ISOBMFF sample duration, however, when a new event/metadata is occuring before the current is over, the DashEventMessageBox signals the actual duration, while the ISOBMFF sample duration signals the difference in presentation time of the current and next occuring event/metadata. This makes it possible to store overlapping metadata/events, without overlaps in the timeline of the ISOBMFF track. 
-
-A timed metadata track structured this way has the following benefits: 
-
-- Allow the client processing model to use the <var>value</var> and <var>id</var> for passing to client and detecting duplicates 
-- multiple events with the same presentation time may exist, i.e. by embedding multiple DashEventMessageBoxes in one ISOBMFF sample
-- overlapping events may exist
-- multiple schemeIdUri per metadata track may exist 
-
-This format maintains the advantage of timed metadata track, which is having a separate light weight metadata file with its own timeline. Also, it is fully compatible with DASH timed metadata and event processing model.
-In the figure below we illustrate the structure of track formatting, in case a fragmented MP4 metadata track is used.
-
-This figure shows the formatting of the timed metadata track, in case of a fragmented structure.
-<figure class="figure">
-  <img src="Images/timedMetadataTrack.png" />
-  <figcaption class="figure"> structure of DashEvent embedded timed metadata track
-</figcaption></figure>
-
-Note that some fragments may contain multiple samples with one or more embedded DASHEventMessageBox, while others might be empty or contain a single sample embedding a single DASHEventMessageBox. In case  of no event nor sample, empty ISOBMFF samples, which are samples with a duration but no bytesize, may be used to fill the timeline as to avoid gaps in the timeline of the timed metadata track.
-
-The ISOBMFF and file format parser can parse the samples and pass them to the Event and Timed Metadata Buffer.
-
 
 # Events and timed metadata sample dispatch timing modes # {#event-metadata-dispatch}
 
@@ -1201,8 +1153,6 @@ If a specific listener is given in the <var>callback_function</var> argument, th
 # Detailed processing # {#detailed-processing}
 As shown in Figure 1, the event/metadata buffer holds the events or metadata samples to be processed. We assume that this buffer have same data structure to hold events or metadata. We use Table 3 to define this Event/Metadata Internal Object (EMIO):
 
-schemeidUri, value, presentation_time, duration, id, messageData.
-
 <figure class="table">
 <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 bgcolor="#DDDDDD"
  style='border-collapse:collapse;border:none'>
@@ -1283,18 +1233,6 @@ The process for converting the received event/metadata sample to EMIO is as foll
       * For each sample:
         * Parse the formant
         * map the data to EMIO
-1. For embedded metadata samples
-    * For each Segment
-      * For each metadata sample
-        * calculate timing
-        * For each emsg
-          * calculate timing
-          * map it to EMIO
-
-Note the constraints in embedded metadata tracks:
-1. event start time is equal the sample presentation time, therefore the values of presentation_time and presentation_time_delta shall be ignored.
-2. if a sample contains more than one esmg box, their duration are equal (and equal to sample duration). 
-3. we don't have the signaling if an event is the continiuation of previous event. repeated emsg 
  
 
 
