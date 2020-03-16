@@ -43,7 +43,7 @@ As shown in Figure 2, every inband Event can be described by three timing parame
 
 1. Event Latest Arrival Time (<var>LAT</var>) which is the earliest presentation time of the Segment containing the Event Message box.
 
-2. Event Presentation/Start Time (<var>ST</var>) which is the moment in the media timeline that the Event becomes active.
+2. Event Presentation/Start Time (<var>ST</var>) which is the moment in the media (MPD) timeline that the Event becomes active.
 
 3. Event duration (<var>DU</var>): the duration for which the Event is active
 
@@ -180,9 +180,8 @@ The <var>ST</var> of an event can be calculated using values in its emsg box:
 <figure class="equation">
 
 $$ST = \begin{cases}
-LAT + \frac{presentation\_time\_delta}{timescale\_v0} \space
-\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad  version=0\\ 
-PeriodStart +  \frac{SegmentBase@presentationTimeOffset}{SegmentBase@timescale} + \frac{presentation\_time}{timescale\_v1}\qquad \qquad version=1
+PeriodStart -  \frac{SegmentBase@presentationTimeOffset}{SegmentBase@timescale}LAT + \frac{presentation\_time\_delta}{timescale\_v0} \space \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad  version=0\\ 
+PeriodStart -  \frac{SegmentBase@presentationTimeOffset}{SegmentBase@timescale} + \frac{presentation\_time}{timescale\_v1}\qquad \qquad version=1
 \end{cases}
 $$
 
@@ -873,7 +872,7 @@ calculated using values in its EventStream and Event elements:
 
 <figure class="equation">
 
-  $$ST = PeriodStart +  
+  $$ST = PeriodStart -  
   \frac{EventStream@presentationTimeOffset}{EventStream@timescale} + 
   \frac{Event@presentationTime}{EventStream@timescale}$$
   <figcaption class="equation">Event Start Time of MPD event
