@@ -180,7 +180,7 @@ The <var>ST</var> of an event can be calculated using values in its emsg box:
 <figure class="equation">
 
 $$ST = \begin{cases}
-PeriodStart -  \frac{SegmentBase@presentationTimeOffset}{SegmentBase@timescale}LAT + \frac{presentation\_time\_delta}{timescale\_v0} \space \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad  version=0\\ 
+PeriodStart -  \frac{SegmentBase@presentationTimeOffset}{SegmentBase@timescale} + LAT + \frac{presentation\_time\_delta}{timescale\_v0} \space \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad  version=0\\ 
 PeriodStart -  \frac{SegmentBase@presentationTimeOffset}{SegmentBase@timescale} + \frac{presentation\_time}{timescale\_v1}\qquad \qquad version=1
 \end{cases}
 $$
